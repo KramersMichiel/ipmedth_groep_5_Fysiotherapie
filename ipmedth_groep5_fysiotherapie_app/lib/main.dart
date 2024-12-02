@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+
+import 'package:ipmedth_groep5_fysiotherapie_app/views/modelTestPage.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
 
 void main() {
@@ -36,6 +39,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final page_controller = PageController(initialPage: 0,);
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    page_controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -48,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: page_controller,
         children: [
           tempLandingPage(),
-          
+          modelTestPage(),
           ],
       ),
     );
