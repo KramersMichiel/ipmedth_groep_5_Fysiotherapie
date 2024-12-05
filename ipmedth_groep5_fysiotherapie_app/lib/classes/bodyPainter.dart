@@ -6,10 +6,12 @@ import 'package:ipmedth_groep5_fysiotherapie_app/classes/coordinate_translator.d
 
 //this is the class to paint the body landmarks and other required visualisations(body lines, angles) on a given image
 class bodyPainter extends CustomPainter {
-  bodyPainter(this.image, this.pose);
+  bodyPainter(this.image, this.pose, this.angles, this.isSideView);
 
   final ui.Image image;
   final Pose pose;
+  final Map<String,double> angles;
+  final bool isSideView;
 
   @override
   void paint(Canvas canvas, Size size){
@@ -88,6 +90,10 @@ class bodyPainter extends CustomPainter {
         PoseLandmarkType.leftShoulder, PoseLandmarkType.leftHip, leftPaint);
     paintLine(PoseLandmarkType.rightShoulder, PoseLandmarkType.rightHip,
         rightPaint);
+    paintLine(
+        PoseLandmarkType.rightHip, PoseLandmarkType.leftHip, paint);
+    paintLine(
+        PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder, paint);
 
     //Draw legs
     paintLine(PoseLandmarkType.leftHip, PoseLandmarkType.leftKnee, leftPaint);
@@ -112,13 +118,47 @@ class bodyPainter extends CustomPainter {
     paintLine(
         PoseLandmarkType.rightHeel, PoseLandmarkType.rightFootIndex, rightPaint);
 
+
+    //set up the functions to display angles next to their bodyparts
+    const textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 15,
+    );
+
+    void drawText(double angle, PoseLandmarkType displayLandmark, bool isLeft){
+      TextPainter testPainter = TextPainter(
+        text: TextSpan(text: angle.toStringAsFixed(1), style: textStyle),
+        textDirection: TextDirection.ltr,
+      );
+      testPainter.layout(minWidth: 0,maxWidth: 40);
+      Offset textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x + 10, size, imageSize), translateY(pose.landmarks[displayLandmark]!.y, size, imageSize)); 
+      if(isLeft){
+        textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x - 55, size, imageSize), translateY(pose.landmarks[displayLandmark]!.y, size, imageSize)); 
+      }
+      testPainter.paint(canvas, textPlace);
+    }
+
+    //display the angles
+    //First checks which view is displayed and draws the associated angles
+    if(isSideView){
+      drawText(angles["leftKnee"]!, PoseLandmarkType.leftKnee, false);
+      drawText(angles["rightKnee"]!, PoseLandmarkType.rightKnee, false);
+      drawText(angles["back"]!, PoseLandmarkType.rightHip, false);
+    }
+    else{
+      drawText(angles["shoulders"]!, PoseLandmarkType.rightShoulder, false);
+      drawText(angles["hips"]!, PoseLandmarkType.rightHip, false);
+      drawText(angles["leftHeel"]!, PoseLandmarkType.leftAnkle, true);
+      drawText(angles["rightHeel"]!, PoseLandmarkType.rightAnkle, false);
+    }
+   
   }
 
   //Sets the condition in which the painter needs to redraw the canvas.
   //When this returns true it will repaint
   @override
   bool shouldRepaint(covariant bodyPainter oldDelegate){
-    return oldDelegate.image != image || oldDelegate.pose != pose;
+    return oldDelegate.image != image || oldDelegate.pose != pose || oldDelegate.angles != angles;
   }
 }
 

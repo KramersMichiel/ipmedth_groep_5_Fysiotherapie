@@ -18,6 +18,7 @@ class _modelTestPageState extends State<modelTestPage> {
   final bodyTrackingManager bodyManager = bodyTrackingManager();
 
   Pose? pose;
+  Map<String,double>? angles;
   ui.Image? image;
   File? imageFile;
 
@@ -48,6 +49,7 @@ class _modelTestPageState extends State<modelTestPage> {
       print(poses[0]);
       setState((){
         pose = poses[0];
+        angles = bodyManager.calculateAngles(poses[0]);
         //prints the coordinates per landmark for testing purposes
         pose!.landmarks.forEach((_, landmark) {
           String printding = landmark.type.toString() + ": " + landmark.x.toString() + "," + landmark.y.toString() + "," + landmark.z.toString() + " " + landmark.likelihood.toString();
@@ -75,7 +77,7 @@ class _modelTestPageState extends State<modelTestPage> {
               width: MediaQuery.of(context).size.width*0.9,
               child: 
               image != null
-              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!, pose: pose,)
+              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!, pose: pose, angles: angles,)
               :DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.black

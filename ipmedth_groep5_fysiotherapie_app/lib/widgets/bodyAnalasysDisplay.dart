@@ -6,11 +6,12 @@ import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dar
 import 'dart:ui' as ui;
 
 class Bodyanalasysdisplay extends StatelessWidget {
-  const Bodyanalasysdisplay({super.key, required this.image, required this.imageFile, this.pose});
+  const Bodyanalasysdisplay({super.key, required this.image, required this.imageFile, this.pose, this.angles});
 
   final ui.Image image;
   final File imageFile;
   final Pose? pose;
+  final Map<String,double>? angles;
   @override
   Widget build(BuildContext context) {
     return  FittedBox(
@@ -23,7 +24,7 @@ class Bodyanalasysdisplay extends StatelessWidget {
           width: MediaQuery.of(context).size.width*0.9,
           //Also currently uses that same size, hardcoded in this section to size the canvas
           //Gives a custompaint, which uses the given image and pose to draw the image with the given landmarks as a canvas
-          child: CustomPaint(painter: bodyPainter(image, pose!,), size: Size(MediaQuery.of(context).size.width*0.9,MediaQuery.of(context).size.height*0.9),child: Container(),))
+          child: CustomPaint(painter: bodyPainter(image, pose!, angles!, false), size: Size(MediaQuery.of(context).size.width*0.9,MediaQuery.of(context).size.height*0.9),child: Container(),))
         :RawImage(image: image),
     );
   }
