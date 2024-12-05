@@ -23,6 +23,7 @@ class _modelTestPageState extends State<modelTestPage> {
 
   final ImagePicker grabber = ImagePicker();
 
+  //gives the user their galary to select an image and stores them as a file and as an ui.image
   Future<void> grabImage() async{
     final XFile? grabbedImage = await grabber.pickImage(source: ImageSource.gallery);
     if(grabbedImage != null){
@@ -39,12 +40,15 @@ class _modelTestPageState extends State<modelTestPage> {
     }
   }
 
+  //takes the image and inserts it into the bodymanager to get the given landmarks.
+  //stores them in the state as a pose variable
   void analyseImage() async{
     if(imageFile != null){
       final List<Pose> poses = await bodyManager.analysePose(imageFile!);
       print(poses[0]);
       setState((){
         pose = poses[0];
+        //prints the coordinates per landmark for testing purposes
         pose!.landmarks.forEach((_, landmark) {
           String printding = landmark.type.toString() + ": " + landmark.x.toString() + "," + landmark.y.toString() + "," + landmark.z.toString() + " " + landmark.likelihood.toString();
           print(printding);
@@ -53,6 +57,7 @@ class _modelTestPageState extends State<modelTestPage> {
     }
   }
 
+  //convert a file image to an ui.image
   Future<ui.Image> _loadImage(File file) async{
     final data = await file.readAsBytes();
     return await decodeImageFromList(data);

@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:ipmedth_groep5_fysiotherapie_app/classes/coordinate_translator.dart';
 
-
+//this is the class to paint the body landmarks and other required visualisations(body lines, angles) on a given image
 class bodyPainter extends CustomPainter {
   bodyPainter(this.image, this.pose);
 
@@ -13,6 +13,8 @@ class bodyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size){
+    //Sets the paint pallette for the visualisation
+    //currently exists of a default paint color for the landmarks and seperate colors for body lines on the right and left side of the body
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
@@ -28,17 +30,22 @@ class bodyPainter extends CustomPainter {
       ..strokeWidth = 3.0
       ..color = Colors.blueAccent;
 
-    // canvas.drawImage(image, Offset.zero, Paint());
-
+    
+    //draws the image on the canvas to make sure it is displayed correctly
+    //This also ensures the landmarks and other visualisations are always displayed correctly on the body
     Size imageSize = Size(image.width.toDouble(),image.height.toDouble());
 
     Rect imageRect = Offset.zero & imageSize;
     Rect canvasSize = Offset.zero & size;
     canvas.drawImageRect(image, imageRect, canvasSize, Paint());
 
+    //Takes all the landmarks and draws them as points on the body
+    //should not paint all landmarks, but that should be implemented later
     pose.landmarks.forEach((_, landmark) {
       canvas.drawCircle(
         Offset(
+          //Because the size of the image is rarely the same size as the canvas the translate function calculates where
+          //the position will be on the resized image
           translateX(landmark.x, size, imageSize),
           translateY(landmark.y, size, imageSize) 
           ),
@@ -47,6 +54,7 @@ class bodyPainter extends CustomPainter {
       );
     });
 
+    //Function to take two landmarks and draw a line between them
     void paintLine(PoseLandmarkType type1, PoseLandmarkType type2, Paint paintType){
         final PoseLandmark joint1 = pose.landmarks[type1]!;
         final PoseLandmark joint2 = pose.landmarks[type2]!;
@@ -62,6 +70,8 @@ class bodyPainter extends CustomPainter {
           paintType
         );
     }
+
+    //Draws all the bodypart lines to be displayed on the body
 
     //Draw arms
     // paintLine(
@@ -87,6 +97,8 @@ class bodyPainter extends CustomPainter {
         PoseLandmarkType.rightHip, PoseLandmarkType.rightKnee, rightPaint);
     paintLine(
         PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
+    
+    //Draw feet
     paintLine(
         PoseLandmarkType.leftAnkle, PoseLandmarkType.leftHeel, leftPaint);
     paintLine(
@@ -102,6 +114,8 @@ class bodyPainter extends CustomPainter {
 
   }
 
+  //Sets the condition in which the painter needs to redraw the canvas.
+  //When this returns true it will repaint
   @override
   bool shouldRepaint(covariant bodyPainter oldDelegate){
     return oldDelegate.image != image || oldDelegate.pose != pose;

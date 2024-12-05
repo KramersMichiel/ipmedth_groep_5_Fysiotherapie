@@ -14,10 +14,15 @@ class Bodyanalasysdisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  FittedBox(
+      //currently checks wether poses have been calculated
+      //will display the pose canvas if they have or the base image if they havent
       child: pose != null
         ?SizedBox(
+          //currently uses very large size coded in the widget itself to size itself
           height: MediaQuery.of(context).size.height*0.9,
           width: MediaQuery.of(context).size.width*0.9,
+          //Also currently uses that same size, hardcoded in this section to size the canvas
+          //Gives a custompaint, which uses the given image and pose to draw the image with the given landmarks as a canvas
           child: CustomPaint(painter: bodyPainter(image, pose!,), size: Size(MediaQuery.of(context).size.width*0.9,MediaQuery.of(context).size.height*0.9),child: Container(),))
         :RawImage(image: image),
     );
