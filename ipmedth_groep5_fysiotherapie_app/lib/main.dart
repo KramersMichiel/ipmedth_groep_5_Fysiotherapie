@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/views/landingPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,13 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Gait Analysis Demo',
       theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: const GaitAnalysisColorScheme(),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Landingpage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -33,7 +33,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final page_controller = PageController(initialPage: 0,);
+  final page_controller = PageController(
+    initialPage: 0,
+  );
+
+  Widget tempLandingPage() {
+    return Center(
+      child: Text('Temporary Landing Page'),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +56,54 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: page_controller,
         children: [
           tempLandingPage(),
-          
-          ],
+        ],
       ),
     );
   }
+}
+
+class GaitAnalysisColorScheme extends ColorScheme {
+  static const Color primaryColor = Color(0xff2C8C39);
+  static const Color onPrimaryColor = Color(0xffFFFFFF);
+
+  static const Color secondaryColor = Color(0xffEFF5E0);
+  static const Color onSecondaryColor = Color(0xff161412);
+
+  static const Color surfaceColor = Color(0xffEFF5E0);
+  static const Color onSurfaceColor = Color(0xff161412);
+
+  static const Color backgroundColor = Color(0xffF7FAF0);
+  static const Color onBackgroundColor = Color(0xff161412);
+
+  static const Color errorColor = Color(0xffBA1200);
+  static const Color onErrorColor = Color(0xffFFFFFF);
+
+  // Override the constructor
+  const GaitAnalysisColorScheme({
+    // Set your custom colors as primary and secondary
+    Color primary = primaryColor,
+    Color onPrimary = onPrimaryColor,
+    Color secondary = secondaryColor,
+    Color onSecondary = onSecondaryColor,
+    Color surface = surfaceColor,
+    Color onSurface = onSurfaceColor,
+    Color background = backgroundColor,
+    Color onBackground = onBackgroundColor,
+    Color error = errorColor,
+    Color onError = onErrorColor,
+
+    // Include other color properties from the super class
+    // such as background, surface, onBackground, etc.
+  }) : super(
+            brightness: Brightness.light,
+            primary: primary,
+            secondary: secondary,
+            background: background,
+            onPrimary: onPrimary,
+            onSecondary: onSecondary,
+            onBackground: onBackground,
+            surface: surface,
+            onSurface: onSurface,
+            error: error,
+            onError: onError);
 }
