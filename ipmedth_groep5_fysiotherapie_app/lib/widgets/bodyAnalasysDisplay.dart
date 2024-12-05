@@ -11,7 +11,6 @@ class Bodyanalasysdisplay extends StatelessWidget {
   final ui.Image image;
   final File imageFile;
   final Pose? pose;
-
   @override
   Widget build(BuildContext context) {
     return  FittedBox(
@@ -19,7 +18,7 @@ class Bodyanalasysdisplay extends StatelessWidget {
         ?SizedBox(
           height: MediaQuery.of(context).size.height*0.9,
           width: MediaQuery.of(context).size.width*0.9,
-          child: CustomPaint(painter: bodyPainter(image, pose!,), size: Size(720,1270),child: Container(),))
+          child: CustomPaint(painter: bodyPainter(image, pose!,), size: Size(MediaQuery.of(context).size.width*0.9,MediaQuery.of(context).size.height*0.9),child: Container(),))
         :RawImage(image: image),
     );
   }

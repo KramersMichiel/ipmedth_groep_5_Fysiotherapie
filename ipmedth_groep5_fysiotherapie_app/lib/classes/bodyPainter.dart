@@ -28,8 +28,6 @@ class bodyPainter extends CustomPainter {
       ..strokeWidth = 3.0
       ..color = Colors.blueAccent;
 
-    print("test");
-    print(size);
     // canvas.drawImage(image, Offset.zero, Paint());
 
     Size imageSize = Size(image.width.toDouble(),image.height.toDouble());
@@ -42,12 +40,66 @@ class bodyPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(
           translateX(landmark.x, size, imageSize),
-          translateX(landmark.y, size, imageSize) 
+          translateY(landmark.y, size, imageSize) 
           ),
         1,
         paint,
       );
     });
+
+    void paintLine(PoseLandmarkType type1, PoseLandmarkType type2, Paint paintType){
+        final PoseLandmark joint1 = pose.landmarks[type1]!;
+        final PoseLandmark joint2 = pose.landmarks[type2]!;
+        canvas.drawLine(
+          Offset(
+            translateX(joint1.x, size, imageSize),
+            translateY(joint1.y, size, imageSize) 
+          ),
+          Offset(
+            translateX(joint2.x, size, imageSize),
+            translateY(joint2.y, size, imageSize) 
+          ),
+          paintType
+        );
+    }
+
+    //Draw arms
+    // paintLine(
+    //     PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow, leftPaint);
+    // paintLine(
+    //     PoseLandmarkType.leftElbow, PoseLandmarkType.leftWrist, leftPaint);
+    // paintLine(PoseLandmarkType.rightShoulder, PoseLandmarkType.rightElbow,
+    //     rightPaint);
+    // paintLine(
+    //     PoseLandmarkType.rightElbow, PoseLandmarkType.rightWrist, rightPaint);
+
+    //Draw Body
+    paintLine(
+        PoseLandmarkType.leftShoulder, PoseLandmarkType.leftHip, leftPaint);
+    paintLine(PoseLandmarkType.rightShoulder, PoseLandmarkType.rightHip,
+        rightPaint);
+
+    //Draw legs
+    paintLine(PoseLandmarkType.leftHip, PoseLandmarkType.leftKnee, leftPaint);
+    paintLine(
+        PoseLandmarkType.leftKnee, PoseLandmarkType.leftAnkle, leftPaint);
+    paintLine(
+        PoseLandmarkType.rightHip, PoseLandmarkType.rightKnee, rightPaint);
+    paintLine(
+        PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
+    paintLine(
+        PoseLandmarkType.leftAnkle, PoseLandmarkType.leftHeel, leftPaint);
+    paintLine(
+        PoseLandmarkType.rightAnkle, PoseLandmarkType.rightHeel, rightPaint);
+    paintLine(
+        PoseLandmarkType.leftAnkle, PoseLandmarkType.leftFootIndex, leftPaint);
+    paintLine(
+        PoseLandmarkType.rightAnkle, PoseLandmarkType.rightFootIndex, rightPaint);
+    paintLine(
+        PoseLandmarkType.leftHeel, PoseLandmarkType.leftFootIndex, leftPaint);
+    paintLine(
+        PoseLandmarkType.rightHeel, PoseLandmarkType.rightFootIndex, rightPaint);
+
   }
 
   @override
@@ -55,3 +107,4 @@ class bodyPainter extends CustomPainter {
     return oldDelegate.image != image || oldDelegate.pose != pose;
   }
 }
+

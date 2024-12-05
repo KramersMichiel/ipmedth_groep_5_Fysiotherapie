@@ -46,11 +46,8 @@ class _modelTestPageState extends State<modelTestPage> {
       setState((){
         pose = poses[0];
         pose!.landmarks.forEach((_, landmark) {
-          var type = landmark.type;
-          var x = landmark.x;
-          var y = landmark.y;
-          String printDing = type.toString() + " " + x.toString() + " " + y.toString();
-          print(printDing);
+          String printding = landmark.type.toString() + ": " + landmark.x.toString() + "," + landmark.y.toString() + "," + landmark.z.toString() + " " + landmark.likelihood.toString();
+          print(printding);
         }); 
       });
     }
