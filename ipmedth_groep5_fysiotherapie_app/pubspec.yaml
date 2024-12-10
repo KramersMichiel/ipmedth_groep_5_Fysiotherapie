@@ -21,6 +21,7 @@ version: 1.0.0+1
 environment:
   sdk: ^3.5.4
 
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -30,6 +31,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  file_picker: ^5.3.3
+  better_player_plus: ^1.0.7
 
 
   # The following adds the Cupertino Icons font to your application.
