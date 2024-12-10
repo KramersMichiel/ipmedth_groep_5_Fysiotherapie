@@ -28,22 +28,36 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   String? _videoPath;
 
   Future<void> _pickVideo() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.video,
-      allowMultiple: false,
-    );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.video,
+        allowMultiple: false,
+      );
 
-    if (result != null && result.files.single.path != null) {
-      setState(() {
-        _videoPath = result.files.single.path!;
-      });
+      if (result != null && result.files.single.path != null) {
+        setState(() {
+          _videoPath = result.files.single.path!;
+        });
 
-      // Navigate to video player page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VideoPlayerPage(videoPath: _videoPath!),
-        ),
+        print("Navigating to VideoPlayerPage with path: $_videoPath");
+
+        // Navigate to the video player page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoPlayerPage(videoPath: _videoPath!),
+          ),
+        );
+      } else {
+        print("No video selected");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("No video selected")),
+        );
+      }
+    } catch (e) {
+      print("Error during video picking: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred while picking the video")),
       );
     }
   }
