@@ -6,12 +6,14 @@ import 'package:ipmedth_groep5_fysiotherapie_app/classes/coordinate_translator.d
 
 //this is the class to paint the body landmarks and other required visualisations(body lines, angles) on a given image
 class bodyPainter extends CustomPainter {
-  bodyPainter(this.image, this.pose, this.angles, this.isSideView);
+  bodyPainter(this.image, this.pose, this.angles, this.isSideView, this.offset, [this.zoom = 1]);
 
   final ui.Image image;
   final Pose pose;
   final Map<String,double> angles;
   final bool isSideView;
+  final double zoom;
+  final Offset offset;
 
   @override
   void paint(Canvas canvas, Size size){
@@ -37,7 +39,9 @@ class bodyPainter extends CustomPainter {
     //This also ensures the landmarks and other visualisations are always displayed correctly on the body
     Size imageSize = Size(image.width.toDouble(),image.height.toDouble());
 
-    Rect imageRect = Offset.zero & imageSize;
+    //is fucked, heeft iets met het feit dat het inverted is te maken.
+    //de grootte van de image is inverse aan zijn grootte?? de offset moet inverted zijn??
+    Rect imageRect = offset * -1 *(imageSize.height / size.height) *(1/zoom) & imageSize * (1/zoom);
     Rect canvasSize = Offset.zero & size;
     canvas.drawImageRect(image, imageRect, canvasSize, Paint());
 
@@ -48,9 +52,9 @@ class bodyPainter extends CustomPainter {
         Offset(
           //Because the size of the image is rarely the same size as the canvas the translate function calculates where
           //the position will be on the resized image
-          translateX(landmark.x, size, imageSize),
-          translateY(landmark.y, size, imageSize) 
-          ),
+          translateX(landmark.x, size, imageSize) * zoom,
+          translateY(landmark.y, size, imageSize) * zoom
+          ) + offset,
         1,
         paint,
       );
@@ -62,13 +66,13 @@ class bodyPainter extends CustomPainter {
         final PoseLandmark joint2 = pose.landmarks[type2]!;
         canvas.drawLine(
           Offset(
-            translateX(joint1.x, size, imageSize),
-            translateY(joint1.y, size, imageSize) 
-          ),
+            translateX(joint1.x, size, imageSize) * zoom,
+            translateY(joint1.y, size, imageSize) * zoom
+          ) + offset,
           Offset(
-            translateX(joint2.x, size, imageSize),
-            translateY(joint2.y, size, imageSize) 
-          ),
+            translateX(joint2.x, size, imageSize) * zoom,
+            translateY(joint2.y, size, imageSize) * zoom 
+          ) + offset,
           paintType
         );
     }
@@ -131,9 +135,9 @@ class bodyPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       testPainter.layout(minWidth: 0,maxWidth: 40);
-      Offset textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x + 10, size, imageSize), translateY(pose.landmarks[displayLandmark]!.y, size, imageSize)); 
+      Offset textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x + 10, size, imageSize) * zoom, translateY(pose.landmarks[displayLandmark]!.y, size, imageSize) * zoom) + offset; 
       if(isLeft){
-        textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x - 55, size, imageSize), translateY(pose.landmarks[displayLandmark]!.y, size, imageSize)); 
+        textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x - 55, size, imageSize) * zoom, translateY(pose.landmarks[displayLandmark]!.y, size, imageSize) * zoom) + offset; 
       }
       testPainter.paint(canvas, textPlace);
     }
@@ -158,7 +162,7 @@ class bodyPainter extends CustomPainter {
   //When this returns true it will repaint
   @override
   bool shouldRepaint(covariant bodyPainter oldDelegate){
-    return oldDelegate.image != image || oldDelegate.pose != pose || oldDelegate.angles != angles;
+    return oldDelegate.image != image || oldDelegate.pose != pose || oldDelegate.angles != angles || oldDelegate.offset != offset;
   }
 }
 
