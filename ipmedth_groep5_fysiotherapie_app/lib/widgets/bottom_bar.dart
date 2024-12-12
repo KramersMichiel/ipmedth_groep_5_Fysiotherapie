@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
 
 class Bottom_bar extends StatelessWidget {
   const Bottom_bar({
@@ -20,7 +19,7 @@ class Bottom_bar extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: screenWidth * 0.7, // Adjust the width as needed
                   child: Slider(
                     value: 0.5,

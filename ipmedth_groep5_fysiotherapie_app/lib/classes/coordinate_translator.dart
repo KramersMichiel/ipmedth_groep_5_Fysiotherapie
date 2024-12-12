@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 double translateX(double x, Size canvasSize, Size imageSize){

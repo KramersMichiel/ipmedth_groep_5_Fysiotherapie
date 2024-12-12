@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:vector_math/vector_math.dart';
-import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
 //singleton that has the bodytracker and can be called to do all the actions involving that

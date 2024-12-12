@@ -30,8 +30,8 @@ class _modelTestPageState extends State<modelTestPage> {
       final File grabbedImageFile = File(grabbedImage.path);
       
       final ui.Image convertedImage = await _loadImage(grabbedImageFile);
-      print(convertedImage!.width);
-      print(convertedImage!.height);
+      print(convertedImage.width);
+      print(convertedImage.height);
       setState((){
         image = convertedImage;
         imageFile = grabbedImageFile;
@@ -46,7 +46,7 @@ class _modelTestPageState extends State<modelTestPage> {
       setState((){
         pose = poses[0];
         pose!.landmarks.forEach((_, landmark) {
-          String printding = landmark.type.toString() + ": " + landmark.x.toString() + "," + landmark.y.toString() + "," + landmark.z.toString() + " " + landmark.likelihood.toString();
+          String printding = "${landmark.type}: ${landmark.x},${landmark.y},${landmark.z} ${landmark.likelihood}";
           print(printding);
         }); 
       });
@@ -71,7 +71,7 @@ class _modelTestPageState extends State<modelTestPage> {
               child: 
               image != null
               ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!, pose: pose,)
-              :DecoratedBox(
+              :const DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.black
                 )
@@ -89,7 +89,7 @@ class _modelTestPageState extends State<modelTestPage> {
               onPressed: (){
               grabImage();
               },
-              child: Text("select image",
+              child: const Text("select image",
               style: TextStyle(
                         fontSize: 16.0,
                         color: Colors.white,
@@ -103,7 +103,7 @@ class _modelTestPageState extends State<modelTestPage> {
                 onPressed: (){
                 analyseImage();
                 },
-                child: Text("checkImage",
+                child: const Text("checkImage",
                 style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.white,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-
 import 'package:ipmedth_groep5_fysiotherapie_app/views/modelTestPage.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -60,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: PageView(
         controller: page_controller,
-        children: [
+        children: const [
           tempLandingPage(),
           modelTestPage(),
           ],

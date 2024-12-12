@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/classes/bodyPainter.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'dart:ui' as ui;
 
 class Bodyanalasysdisplay extends StatelessWidget {

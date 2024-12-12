@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/color_button.dart';
 
 class tempLandingPage extends StatefulWidget {
   const tempLandingPage({super.key});
@@ -9,6 +10,7 @@ class tempLandingPage extends StatefulWidget {
 
 class _tempLandingPageState extends State<tempLandingPage> {
   int _counter = 0;
+  Color _currentColor = Colors.blue;
 
   void _incrementCounter() {
     setState(() {
@@ -20,6 +22,11 @@ class _tempLandingPageState extends State<tempLandingPage> {
       _counter++;
     });
   }
+  void _changeColor(Color newColor) {
+    setState(() {
+      _currentColor = newColor;
+    });
+  }
 
 
   @override
@@ -29,10 +36,10 @@ class _tempLandingPageState extends State<tempLandingPage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: _currentColor,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("a"),
+        title: const Text("a"),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -57,9 +64,12 @@ class _tempLandingPageState extends State<tempLandingPage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '${_counter}',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Color_button(lineColor: Colors.red, onPressed: (Color) => _changeColor(Colors.red)),
+            Color_button(lineColor: Colors.green, onPressed: (Color) => _changeColor(Colors.green)),
+            Color_button(lineColor: Colors.blue, onPressed: (Color) => _changeColor(Colors.blue)),
           ],
         ),
       ),
@@ -67,7 +77,8 @@ class _tempLandingPageState extends State<tempLandingPage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

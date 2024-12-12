@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
 
 class Sidebar_analyse extends StatelessWidget {
   const Sidebar_analyse({
@@ -9,7 +8,7 @@ class Sidebar_analyse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Expanded(
+      const Expanded(
           child: Center(
           ),
         ),
