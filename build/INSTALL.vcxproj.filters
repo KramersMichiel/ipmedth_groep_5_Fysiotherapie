@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\ttsdr\IPMEDTH 2024-2025 map\ipmedth_groep_5_Fysiotherapie\build\CMakeFiles\5e991983bf577257bf5b113fe45d3485\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{C89A8D77-9932-3E44-8B0E-B806CCCB50FB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
