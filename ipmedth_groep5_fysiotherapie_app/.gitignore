@@ -111,6 +111,13 @@ build/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
+#macos related
+**/macos/Flutter/GeneratedPluginRegistrant.*
+
+
+#windows related
+**/windows/flutter/generated_plugin_registrant.*
+**/windows/flutter/generated_plugins.*
 
 ### https://raw.github.com/github/gitignore//Android.gitignore
 
