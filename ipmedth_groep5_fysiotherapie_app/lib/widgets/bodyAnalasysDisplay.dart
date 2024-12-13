@@ -19,7 +19,7 @@ class Bodyanalasysdisplay extends StatefulWidget {
 
 class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
-
+  bool isSideView = true;
   double zoom = 3;
   PageState dragMode = PageState.dragScreen;  
 
@@ -31,6 +31,9 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height*0.9;
     final width = MediaQuery.of(context).size.width*0.9;
+    double ratio = width/widget.image.width;
+    double maxWidth = widget.image.width*-1*(zoom-1) * ratio;
+    double maxHeight = widget.image.height*-1*(zoom-1) * ratio;
     return  FittedBox(
       //currently checks wether poses have been calculated
       //will display the pose canvas if they have or the base image if they havent
@@ -38,10 +41,11 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
         ?GestureDetector(
           onPanUpdate: (details){
             this.setState(() {
-              print((offset+details.delta).dy);
-              print((widget.image.height*-1*(zoom-1)));
-              if(dragMode == PageState.dragScreen && (offset+details.delta).dx < 0 && (offset+details.delta).dy < 0 && (offset+details.delta).dx > (widget.image.width*-1*(zoom-1))&& (offset+details.delta).dy > (widget.image.height*-1*(zoom-1))){
-                offset+=details.delta;
+              if(dragMode == PageState.dragScreen){
+                Offset offsetChange = offset + details.delta;
+                if(offsetChange.dx < 0 && offsetChange.dy < 0 && offsetChange.dx > maxWidth && offsetChange.dy > maxHeight){
+                  offset = offsetChange;
+                }
               }
             });
             
@@ -52,7 +56,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
             width: width,
             //Also currently uses that same size, hardcoded in this section to size the canvas
             //Gives a custompaint, which uses the given image and pose to draw the image with the given landmarks as a canvas
-            child: CustomPaint(painter: bodyPainter(widget.image, widget.pose!, widget.angles!, true, offset, zoom),child: Container(),)),
+            child: CustomPaint(painter: bodyPainter(widget.image, widget.pose!, widget.angles!, isSideView, offset, zoom),child: Container(),)),
         )
         :RawImage(image: widget.image),
     );
