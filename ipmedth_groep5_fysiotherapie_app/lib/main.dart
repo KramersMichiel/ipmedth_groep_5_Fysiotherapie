@@ -1,55 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
+import 'package:file_picker/file_picker.dart';
+import 'video_player_page.dart'; // Create this file for the video player page
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Video Upload & Play',
       theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: UploadVideoPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
+class UploadVideoPage extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _UploadVideoPageState createState() => _UploadVideoPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final page_controller = PageController(initialPage: 0,);
+class _UploadVideoPageState extends State<UploadVideoPage> {
+  String? _videoPath;
+
+  Future<void> _pickVideo() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+      allowMultiple: false,
+    );
+
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        _videoPath = result.files.single.path!;
+      });
+
+      // Navigate to video player page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VideoPlayerPage(videoPath: _videoPath!),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: PageView(
-        controller: page_controller,
-        children: [
-          tempLandingPage(),
-          
-          ],
+      appBar: AppBar(
+        title: Text('Upload Video'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _pickVideo,
+          child: Text('Upload Video'),
+        ),
       ),
     );
   }
