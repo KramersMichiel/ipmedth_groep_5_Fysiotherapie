@@ -29,7 +29,7 @@ class bodyTrackingManager {
   }
 
   //function for finding all the required body angles from a given persons found bodyparts
-  Map<String,double> calculateAngles(Pose pose){
+  Map<LandmarkAngle,double> calculateAngles(Pose pose){
     //convert two landmarks into a vector
     Vector2 makeVector2d(PoseLandmarkType point1Type, PoseLandmarkType point2Type){
       final PoseLandmark point1 = pose.landmarks[point1Type]!;
@@ -94,22 +94,22 @@ class bodyTrackingManager {
     }
 
     //store all the calculated angles in a single map
-    Map<String,double> angles = {};
+    Map<LandmarkAngle,double> angles = {};
 
     //calculate the required angles from the sideview
     //Fysiotherapists use the deviation angle from a stretched leg instead of the direct angle of the knee
     //therefore the angle needs to be the calculated angle subtracted from 180 as this is the inverse
-    angles['leftKnee'] = 180 - getAngle2d(PoseLandmarkType.leftKnee,PoseLandmarkType.leftHip, PoseLandmarkType.leftAnkle);
-    angles['rightKnee'] = 180 - getAngle2d(PoseLandmarkType.rightKnee,PoseLandmarkType.rightHip, PoseLandmarkType.rightAnkle);
+    angles[LandmarkAngle.leftKnee] = 180 - getAngle2d(PoseLandmarkType.leftKnee,PoseLandmarkType.leftHip, PoseLandmarkType.leftAnkle);
+    angles[LandmarkAngle.rightKnee] = 180 - getAngle2d(PoseLandmarkType.rightKnee,PoseLandmarkType.rightHip, PoseLandmarkType.rightAnkle);
     //With the back the required angle is the offset from a straight line up from the hip
-    angles['back'] = getAngle2dVirtualVertical(PoseLandmarkType.rightHip, PoseLandmarkType.rightShoulder, true);
+    angles[LandmarkAngle.back] = getAngle2dVirtualVertical(PoseLandmarkType.rightHip, PoseLandmarkType.rightShoulder, true);
 
     //calculate the required angles from the backview
-    angles['shoulders'] = getAngle2dVirtualHorizontal(PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder);
-    angles['hips'] = getAngle2dVirtualHorizontal(PoseLandmarkType.leftHip, PoseLandmarkType.rightHip);
+    angles[LandmarkAngle.shoulders] = getAngle2dVirtualHorizontal(PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder);
+    angles[LandmarkAngle.hips] = getAngle2dVirtualHorizontal(PoseLandmarkType.leftHip, PoseLandmarkType.rightHip);
     //With the heels the required offset is the offset from a straight line down from the ankle
-    angles['leftHeel'] = getAngle2dVirtualVertical(PoseLandmarkType.leftAnkle, PoseLandmarkType.leftHeel, true);
-    angles['rightHeel'] = getAngle2dVirtualVertical(PoseLandmarkType.rightAnkle, PoseLandmarkType.rightHeel, true);
+    angles[LandmarkAngle.leftHeel] = getAngle2dVirtualVertical(PoseLandmarkType.leftAnkle, PoseLandmarkType.leftHeel, true);
+    angles[LandmarkAngle.rightHeel] = getAngle2dVirtualVertical(PoseLandmarkType.rightAnkle, PoseLandmarkType.rightHeel, true);
 
     return angles;    
   }
@@ -125,3 +125,5 @@ double calculateVectorLength(Vector2 vector){
 double calculateAngle2d(Vector2 vector1, Vector2 vector2){
   return degrees(acos(dot2(vector1, vector2) / (calculateVectorLength(vector1) * calculateVectorLength(vector2))));
 }
+
+enum LandmarkAngle {leftKnee,rightKnee,zoom,back,shoulders,hips,leftHeel,rightHeel}

@@ -18,7 +18,7 @@ class _modelTestPageState extends State<modelTestPage> {
   final bodyTrackingManager bodyManager = bodyTrackingManager();
 
   Pose? pose;
-  Map<String,double>? angles;
+  Map<LandmarkAngle,double>? angles;
   ui.Image? image;
   File? imageFile;
 
@@ -123,3 +123,4 @@ class _modelTestPageState extends State<modelTestPage> {
     );
   }
 }
+

@@ -11,7 +11,7 @@ class Bodyanalasysdisplay extends StatefulWidget {
   final ui.Image image;
   final File imageFile;
   final Pose? pose;
-  final Map<String,double>? angles;
+  final Map<LandmarkAngle,double>? angles;
 
   @override
   State<Bodyanalasysdisplay> createState() => _BodyanalasysdisplayState();

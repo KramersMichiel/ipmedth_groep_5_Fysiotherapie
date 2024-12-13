@@ -3,6 +3,7 @@ import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'dart:ui' as ui;
 
 import 'package:ipmedth_groep5_fysiotherapie_app/classes/coordinate_translator.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 
 //this is the class to paint the body landmarks and other required visualisations(body lines, angles) on a given image
 class bodyPainter extends CustomPainter {
@@ -10,7 +11,7 @@ class bodyPainter extends CustomPainter {
 
   final ui.Image image;
   final Pose pose;
-  final Map<String,double> angles;
+  final Map<LandmarkAngle,double> angles;
   final bool isSideView;
   final double zoom;
   final Offset offset;
@@ -145,15 +146,15 @@ class bodyPainter extends CustomPainter {
     //display the angles
     //First checks which view is displayed and draws the associated angles
     if(isSideView){
-      drawText(angles["leftKnee"]!, PoseLandmarkType.leftKnee, false);
-      drawText(angles["rightKnee"]!, PoseLandmarkType.rightKnee, false);
-      drawText(angles["back"]!, PoseLandmarkType.rightHip, false);
+      drawText(angles[LandmarkAngle.leftKnee]!, PoseLandmarkType.leftKnee, false);
+      drawText(angles[LandmarkAngle.rightKnee]!, PoseLandmarkType.rightKnee, false);
+      drawText(angles[LandmarkAngle.back]!, PoseLandmarkType.rightHip, false);
     }
     else{
-      drawText(angles["shoulders"]!, PoseLandmarkType.rightShoulder, false);
-      drawText(angles["hips"]!, PoseLandmarkType.rightHip, false);
-      drawText(angles["leftHeel"]!, PoseLandmarkType.leftAnkle, true);
-      drawText(angles["rightHeel"]!, PoseLandmarkType.rightAnkle, false);
+      drawText(angles[LandmarkAngle.shoulders]!, PoseLandmarkType.rightShoulder, false);
+      drawText(angles[LandmarkAngle.hips]!, PoseLandmarkType.rightHip, false);
+      drawText(angles[LandmarkAngle.leftHeel]!, PoseLandmarkType.leftAnkle, true);
+      drawText(angles[LandmarkAngle.rightHeel]!, PoseLandmarkType.rightAnkle, false);
     }
    
   }
