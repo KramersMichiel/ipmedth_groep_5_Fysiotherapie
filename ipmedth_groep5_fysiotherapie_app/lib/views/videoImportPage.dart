@@ -62,35 +62,56 @@ class _VideoImportPageState extends State<VideoImportPage> {
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _videoPlaceholder(1, _videoFile1, _videoController1),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 16),
-            _videoPlaceholder(2, _videoFile2, _videoController2),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _videoFile1 != null || _videoFile2 != null
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BodyAnalysisPage(
-                            videoFile1: _videoFile1,
-                            videoFile2: _videoFile2,
-                            child:
-                                Container(), // Add the required child parameter
+        child: Stack(children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _videoPlaceholder(1, _videoFile1, _videoController1),
+              const SizedBox(height: 16),
+              Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: const Divider(),
+                ),
+              ), // Divider die niet volledig doorloopt.
+              const SizedBox(height: 16),
+              _videoPlaceholder(2, _videoFile2, _videoController2),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: _videoFile1 != null || _videoFile2 != null
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BodyAnalysisPage(
+                              videoFile1: _videoFile1,
+                              videoFile2: _videoFile2,
+                              child:
+                                  Container(), // Add the required child parameter
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  : null,
-              child: const Text('Analyze Videos'),
+                        );
+                      }
+                    : null,
+                child: const Text('Analyze Videos'),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                size: 40,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pop(context); // Goes back to the previous screen
+              },
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }
