@@ -21,6 +21,11 @@ class _modelTestPageState extends State<modelTestPage> {
   Map<LandmarkAngle,double>? angles;
   ui.Image? image;
   File? imageFile;
+  //Because the landmarks in the recieved pose cant be altered it is unfortunately needed to make a seperate variable that is alterable
+  Map<PoseLandmarkType,Map<newPoseElement,double>> newPose = {};
+  //govern the state of the analasys display widget
+  String stateText = "pan";
+  PageState curState = PageState.dragScreen;
 
   final ImagePicker grabber = ImagePicker();
 
@@ -54,6 +59,7 @@ class _modelTestPageState extends State<modelTestPage> {
         pose!.landmarks.forEach((_, landmark) {
           String printding = landmark.type.toString() + ": " + landmark.x.toString() + "," + landmark.y.toString() + "," + landmark.z.toString() + " " + landmark.likelihood.toString();
           print(printding);
+          newPose[landmark.type] = {newPoseElement.x:landmark.x, newPoseElement.y:landmark.y, newPoseElement.zoom:1};
         }); 
       });
     }
@@ -63,6 +69,23 @@ class _modelTestPageState extends State<modelTestPage> {
   Future<ui.Image> _loadImage(File file) async{
     final data = await file.readAsBytes();
     return await decodeImageFromList(data);
+  }
+
+  //Switch between the drag states of the analasys display
+  void switchState(){
+    setState((){
+      switch(curState){
+        case PageState.dragLandmark:
+          curState = PageState.dragScreen;
+          stateText = "pan";
+          break;
+        case PageState.dragScreen:
+          curState = PageState.dragLandmark;
+          stateText = "drag";
+          break;
+      }
+    });
+    
   }
 
   @override
@@ -77,7 +100,7 @@ class _modelTestPageState extends State<modelTestPage> {
               width: MediaQuery.of(context).size.width*0.9,
               child: 
               image != null
-              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!, pose: pose, angles: angles,)
+              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!, pose: pose, angles: angles, newPose: newPose, dragMode: curState,)
               :DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.black
@@ -111,6 +134,20 @@ class _modelTestPageState extends State<modelTestPage> {
                 analyseImage();
                 },
                 child: Text("checkImage",
+                style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ),)),
+                        ElevatedButton(
+                style:  ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        elevation: 0,
+                      ),
+                onPressed: (){
+                switchState();
+                },
+                child: Text(stateText,
                 style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.white,

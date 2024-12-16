@@ -18,6 +18,7 @@ class bodyTrackingManager {
   //directly set a posedetector. Prevents multiple versions from existing and prevents having to construct it for every analasys
   final PoseDetector detector = PoseDetector(options: PoseDetectorOptions());
 
+
   //Takes an input image as file and runs the machine learning model on it
   //returns the found landmarks from the first person found
   Future<List<Pose>> analysePose(File image) async{

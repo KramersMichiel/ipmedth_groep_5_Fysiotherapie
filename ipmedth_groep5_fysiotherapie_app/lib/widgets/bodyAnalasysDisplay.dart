@@ -6,12 +6,14 @@ import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dar
 import 'dart:ui' as ui;
 
 class Bodyanalasysdisplay extends StatefulWidget {
-  const Bodyanalasysdisplay({super.key, required this.image, required this.imageFile, this.pose, this.angles});
+  const Bodyanalasysdisplay({super.key, required this.image, required this.imageFile, this.pose, this.angles, required this.newPose, required this.dragMode});
 
   final ui.Image image;
   final File imageFile;
   final Pose? pose;
   final Map<LandmarkAngle,double>? angles;
+  final Map<PoseLandmarkType,Map<newPoseElement,double>> newPose;
+  final PageState dragMode;
 
   @override
   State<Bodyanalasysdisplay> createState() => _BodyanalasysdisplayState();
@@ -21,7 +23,6 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   bool isSideView = true;
   double zoom = 3;
-  PageState dragMode = PageState.dragScreen;  
 
   Offset offset = Offset(0,0);
   Offset minOffset = Offset(0,0);
@@ -41,7 +42,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
         ?GestureDetector(
           onPanUpdate: (details){
             this.setState(() {
-              if(dragMode == PageState.dragScreen){
+              if(widget.dragMode == PageState.dragScreen){
                 Offset offsetChange = offset + details.delta;
                 if(offsetChange.dx < 0 && offsetChange.dy < 0 && offsetChange.dx > maxWidth && offsetChange.dy > maxHeight){
                   offset = offsetChange;
@@ -63,3 +64,4 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   }
 }
 enum PageState {dragScreen, dragLandmark}
+enum newPoseElement {x,y,zoom}
