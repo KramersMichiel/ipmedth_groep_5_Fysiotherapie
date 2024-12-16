@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/classes/bodyPainter.dart';
 import 'dart:ui' as ui;
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 
 class Bodyanalasysdisplay extends StatefulWidget {
   const Bodyanalasysdisplay({super.key, required this.image, required this.imageFile, this.pose, this.angles, required this.newPose, required this.dragMode});
