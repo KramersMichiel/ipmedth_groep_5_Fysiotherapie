@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 
-class ColorManager {
+class ColorManager extends ChangeNotifier{
   ColorManager._privateConstructor();
 
   static final ColorManager _instance = ColorManager._privateConstructor();
@@ -13,7 +13,7 @@ class ColorManager {
   
   final Map<Markers, Color> markerColors = {
     Markers.markerPoint: Colors.red,
-    Markers.markerleft: Colors.blue,
+    Markers.markerLeft: Colors.blue,
     Markers.markerRight: Colors.green,
   };
 
@@ -21,14 +21,15 @@ class ColorManager {
     return markerColors[marker]!;
   }
 
-  void setMarkerColors(Markers marker, Color newColor){
+  void setMarkerColor(Markers marker, Color newColor){
     markerColors[marker] = newColor;
+    notifyListeners();
   }
 }
 
 
 enum Markers {
   markerPoint,
-  markerleft,
+  markerLeft,
   markerRight,
 }

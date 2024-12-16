@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/views/modelTestPage.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
-
+import 'package:provider/provider.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ColorManager(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
