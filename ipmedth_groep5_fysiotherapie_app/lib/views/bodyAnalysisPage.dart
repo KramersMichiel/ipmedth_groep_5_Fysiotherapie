@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import '/widgets/bodyAnalysisMenu.dart'; // Import menu widget
 
 class BodyAnalysisPage extends StatefulWidget {
   @override
   _BodyAnalysisPageState createState() => _BodyAnalysisPageState();
   final File? videoFile1;
-
   final File? videoFile2;
-
   final Widget child;
 
   BodyAnalysisPage(
@@ -23,8 +22,17 @@ class _BodyAnalysisPageState extends State<BodyAnalysisPage> {
       appBar: AppBar(
         title: Text('Body Analysis'),
       ),
-      body: Center(
-        child: Text('Body Analysis Content'),
+      body: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Body Analysis Content'),
+              widget.child,
+            ],
+          ),
+          BodyAnalysisMenu(), // Add your menu widget as an overlay
+        ],
       ),
     );
   }
