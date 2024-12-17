@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:video_player/video_player.dart';
 import '/views/bodyAnalysisPage.dart';
+import '/views/video_player_page.dart'; // Add this line
 
 class VideoImportPage extends StatefulWidget {
   @override
@@ -15,21 +16,23 @@ class _VideoImportPageState extends State<VideoImportPage> {
   VideoPlayerController? _videoController1;
   VideoPlayerController? _videoController2;
 
-  // Function to pick a video from the gallery
+  // Function to pick a video using file_picker
   Future<void> _pickVideo(int videoIndex) async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.video, // Filter to only pick video files
+      allowMultiple: false,
+    );
 
-    if (pickedFile != null) {
+    if (result != null && result.files.single.path != null) {
       setState(() {
         if (videoIndex == 1) {
-          _videoFile1 = File(pickedFile.path);
+          _videoFile1 = File(result.files.single.path!);
           _videoController1 = VideoPlayerController.file(_videoFile1!)
             ..initialize().then((_) {
-              setState(() {}); // Update the UI after the video is initialized
+              setState(() {}); // Update the UI after video is initialized
             });
         } else {
-          _videoFile2 = File(pickedFile.path);
+          _videoFile2 = File(result.files.single.path!);
           _videoController2 = VideoPlayerController.file(_videoFile2!)
             ..initialize().then((_) {
               setState(() {});
@@ -62,56 +65,56 @@ class _VideoImportPageState extends State<VideoImportPage> {
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
-        child: Stack(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _videoPlaceholder(1, _videoFile1, _videoController1),
-              const SizedBox(height: 16),
-              Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: const Divider(),
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _videoPlaceholder(1, _videoFile1, _videoController1),
+                const SizedBox(height: 16),
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: const Divider(),
+                  ),
                 ),
-              ), // Divider die niet volledig doorloopt.
-              const SizedBox(height: 16),
-              _videoPlaceholder(2, _videoFile2, _videoController2),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _videoFile1 != null || _videoFile2 != null
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BodyAnalysisPage(
-                              videoFile1: _videoFile1,
-                              videoFile2: _videoFile2,
-                              child:
-                                  Container(), // Add the required child parameter
+                const SizedBox(height: 16),
+                _videoPlaceholder(2, _videoFile2, _videoController2),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _videoFile1 != null || _videoFile2 != null
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoPlayerPage(
+                                videoPath1: _videoFile1!.path,
+                                videoPath2: _videoFile2!.path,
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    : null,
-                child: const Text('Analyze Videos'),
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                size: 40,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.pop(context); // Goes back to the previous screen
-              },
+                          );
+                        }
+                      : null,
+                  child: const Text('Analyze Videos'),
+                ),
+              ],
             ),
-          ),
-        ]),
+            Positioned(
+              bottom: 16,
+              left: 16,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 40,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // Goes back to the previous screen
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
