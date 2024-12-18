@@ -42,6 +42,50 @@ class _VideoImportPageState extends State<VideoImportPage> {
     }
   }
 
+  // Show a warning if fewer than two videos are selected
+  void _showWarningDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Warning"),
+          content: const Text(
+            "Only one video has been selected. Would you like to continue analyzing just this one video?",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                _navigateToAnalysis(); // Proceed with one video
+              },
+              child: const Text("Continue"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Navigate to the analysis page
+  void _navigateToAnalysis() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoPlayerPage(
+          videoPath1: _videoFile1?.path ?? '',
+          videoPath2:
+              _videoFile2?.path.isNotEmpty == true ? _videoFile2?.path : null,
+        ),
+      ),
+    );
+  }
+
   Widget _videoPlaceholder(
       int videoIndex, File? videoFile, VideoPlayerController? controller) {
     return GestureDetector(
@@ -82,19 +126,17 @@ class _VideoImportPageState extends State<VideoImportPage> {
                 _videoPlaceholder(2, _videoFile2, _videoController2),
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: _videoFile1 != null || _videoFile2 != null
+                  onPressed: _videoFile1 != null
                       ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VideoPlayerPage(
-                                videoPath1: _videoFile1!.path,
-                                videoPath2: _videoFile2!.path,
-                              ),
-                            ),
-                          );
+                          print('Video Path 1: ${_videoFile1?.path}');
+                          print('Video Path 2: ${_videoFile2?.path}');
+                          if (_videoFile2 == null) {
+                            _showWarningDialog(); // Show warning if only one video
+                          } else {
+                            _navigateToAnalysis(); // Proceed normally
+                          }
                         }
-                      : null,
+                      : null, // Disable button if no video is selected
                   child: const Text('Analyze Videos'),
                 ),
               ],
