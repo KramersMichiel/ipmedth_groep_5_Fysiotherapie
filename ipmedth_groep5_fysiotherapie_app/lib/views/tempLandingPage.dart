@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/color_button.dart';
 import 'package:provider/provider.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
@@ -13,6 +14,7 @@ class tempLandingPage extends StatefulWidget {
 class _tempLandingPageState extends State<tempLandingPage> {
   int _counter = 0;
   Color _currentColor = Colors.blue;
+  
 
   void _incrementCounter() {
     setState(() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/views/modelTestPage.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'package:provider/provider.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
 
@@ -8,7 +9,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ColorManager(),
-      child: MyApp(),
+      child: ChangeNotifierProvider(create: (context) => bodyTrackingManager(),child: MyApp()),
     ),
   );
 }

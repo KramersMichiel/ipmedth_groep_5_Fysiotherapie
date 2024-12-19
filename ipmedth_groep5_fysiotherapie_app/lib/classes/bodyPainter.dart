@@ -3,6 +3,7 @@ import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'dart:ui' as ui;
 
 import 'package:ipmedth_groep5_fysiotherapie_app/classes/coordinate_translator.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/classes/landmark.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 
 //this is the class to paint the body landmarks and other required visualisations(body lines, angles) on a given image
@@ -10,7 +11,7 @@ class bodyPainter extends CustomPainter {
   bodyPainter(this.image, this.pose, this.angles, this.isSideView, this.offset, [this.zoom = 1]);
 
   final ui.Image image;
-  final Pose pose;
+  final Map<PoseLandmarkType,Landmark> pose;
   final Map<LandmarkAngle,double> angles;
   final bool isSideView;
   final double zoom;
@@ -48,23 +49,23 @@ class bodyPainter extends CustomPainter {
 
     //Takes all the landmarks and draws them as points on the body
     //should not paint all landmarks, but that should be implemented later
-    pose.landmarks.forEach((_, landmark) {
+    for(PoseLandmarkType type in PoseLandmarkType.values){
       canvas.drawCircle(
         Offset(
           //Because the size of the image is rarely the same size as the canvas the translate function calculates where
           //the position will be on the resized image
-          translateX(landmark.x, size, imageSize) * zoom,
-          translateY(landmark.y, size, imageSize) * zoom
+          translateX(pose[type]!.x, size, imageSize) * zoom,
+          translateY(pose[type]!.y, size, imageSize) * zoom
           ) + offset,
         1,
         paint,
       );
-    });
+    }
 
     //Function to take two landmarks and draw a line between them
     void paintLine(PoseLandmarkType type1, PoseLandmarkType type2, Paint paintType){
-        final PoseLandmark joint1 = pose.landmarks[type1]!;
-        final PoseLandmark joint2 = pose.landmarks[type2]!;
+        final Landmark joint1 = pose[type1]!;
+        final Landmark joint2 = pose[type2]!;
         canvas.drawLine(
           Offset(
             translateX(joint1.x, size, imageSize) * zoom,
@@ -136,9 +137,9 @@ class bodyPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       testPainter.layout(minWidth: 0,maxWidth: 40);
-      Offset textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x + 10, size, imageSize) * zoom, translateY(pose.landmarks[displayLandmark]!.y, size, imageSize) * zoom) + offset; 
+      Offset textPlace = Offset(translateX(pose[displayLandmark]!.x + 10, size, imageSize) * zoom, translateY(pose[displayLandmark]!.y, size, imageSize) * zoom) + offset; 
       if(isLeft){
-        textPlace = Offset(translateX(pose.landmarks[displayLandmark]!.x - 55, size, imageSize) * zoom, translateY(pose.landmarks[displayLandmark]!.y, size, imageSize) * zoom) + offset; 
+        textPlace = Offset(translateX(pose[displayLandmark]!.x - 55, size, imageSize) * zoom, translateY(pose[displayLandmark]!.y, size, imageSize) * zoom) + offset; 
       }
       testPainter.paint(canvas, textPlace);
     }

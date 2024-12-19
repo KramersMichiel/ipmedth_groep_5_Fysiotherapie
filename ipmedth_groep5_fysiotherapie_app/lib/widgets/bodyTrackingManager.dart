@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/classes/landmark.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
 //singleton that has the bodytracker and can be called to do all the actions involving that
-class bodyTrackingManager {
+class bodyTrackingManager extends ChangeNotifier{
   bodyTrackingManager._privateConstructor();
 
   static final bodyTrackingManager _instance = bodyTrackingManager._privateConstructor();
@@ -15,21 +17,70 @@ class bodyTrackingManager {
   }
 
   //directly set a posedetector. Prevents multiple versions from existing and prevents having to construct it for every analasys
-  final PoseDetector detector = PoseDetector(options: PoseDetectorOptions());
+  final PoseDetector _detector = PoseDetector(options: PoseDetectorOptions());
 
+  Map<PoseLandmarkType,Landmark> _landmarks = {};
+
+  Map<LandmarkAngle,double>? _angles;
+
+  bool hasPose = false;
+
+  PageState _dragState = PageState.dragScreen;
+
+  PageState switchDragState(){
+    switch(_dragState){
+      case PageState.dragScreen:
+        _dragState = PageState.dragLandmark;
+        return _dragState;
+      case PageState.dragLandmark:
+        _dragState = PageState.dragScreen;
+        return _dragState;
+    }
+  }
+
+  PageState getDragState(){
+    return _dragState;
+  }
+
+  Map<LandmarkAngle,double>? getAngles(){
+    return _angles;
+  }
+
+  void setHasPoseFalse(){
+    hasPose = false;
+  }
+
+  void _setLandmark(PoseLandmarkType type, double x, double y, double zoom){
+    _landmarks[type] = Landmark(x, y, zoom);
+    String printding = "${type}: ${_landmarks[type]!.x},${_landmarks[type]!.y}";
+      print(printding);
+  }
+
+  Map<PoseLandmarkType,Landmark> getLandmarks(){
+    return _landmarks;
+  }
+
+  void _setLandmarks(Pose pose){
+    pose!.landmarks.forEach((_, landmark) {
+      // String printding = "${landmark.type}: ${landmark.x},${landmark.y},${landmark.z} ${landmark.likelihood}";
+      // print(printding);
+      _setLandmark(landmark.type, landmark.x, landmark.y, 1);
+    });
+    calculateAngles(pose);
+    hasPose = true;
+    notifyListeners();
+  }
 
   //Takes an input image as file and runs the machine learning model on it
   //returns the found landmarks from the first person found
-  Future<List<Pose>> analysePose(File image) async{
+  void analysePose(File image) async{
     final InputImage inputImage = InputImage.fromFile(image);
-    final options = PoseDetectorOptions();
-    final PoseDetector detector = PoseDetector(options: options);
-    
-    return await detector.processImage(inputImage);
+    final poses = await _detector.processImage(inputImage);
+    _setLandmarks(poses[0]); 
   }
 
   //function for finding all the required body angles from a given persons found bodyparts
-  Map<LandmarkAngle,double> calculateAngles(Pose pose){
+  void calculateAngles(Pose pose){
     //convert two landmarks into a vector
     Vector2 makeVector2d(PoseLandmarkType point1Type, PoseLandmarkType point2Type){
       final PoseLandmark point1 = pose.landmarks[point1Type]!;
@@ -111,7 +162,7 @@ class bodyTrackingManager {
     angles[LandmarkAngle.leftHeel] = getAngle2dVirtualVertical(PoseLandmarkType.leftAnkle, PoseLandmarkType.leftHeel, true);
     angles[LandmarkAngle.rightHeel] = getAngle2dVirtualVertical(PoseLandmarkType.rightAnkle, PoseLandmarkType.rightHeel, true);
 
-    return angles;    
+    _angles = angles;    
   }
 
 }
@@ -127,3 +178,4 @@ double calculateAngle2d(Vector2 vector1, Vector2 vector2){
 }
 
 enum LandmarkAngle {leftKnee,rightKnee,zoom,back,shoulders,hips,leftHeel,rightHeel}
+enum PageState {dragScreen, dragLandmark}
