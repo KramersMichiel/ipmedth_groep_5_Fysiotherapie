@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/modelTestPage.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
 import 'package:provider/provider.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
 import 'views/videoImportPage.dart';
@@ -24,7 +22,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -43,7 +40,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final page_controller = PageController(initialPage: 0,);
+  final page_controller = PageController(
+    initialPage: 0,
+  );
 
   @override
   void initState() {
@@ -133,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             )
           ],
+        ),
       ),
     );
   }
