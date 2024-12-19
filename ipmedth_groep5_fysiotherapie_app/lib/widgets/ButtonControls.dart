@@ -5,12 +5,18 @@ class ButtonControls extends StatelessWidget {
   final BetterPlayerController controller1;
   final BetterPlayerController? controller2;
   final bool isPlayingFirstVideo;
+  final VoidCallback togglePlayPause;
+  final bool isLoopingEnabled; // Receive the loop state
+  final VoidCallback toggleLooping;
 
   const ButtonControls({
     Key? key,
     required this.controller1,
     this.controller2,
     required this.isPlayingFirstVideo,
+    required this.togglePlayPause,
+    required this.isLoopingEnabled, // Receive the loop state
+    required this.toggleLooping,
   }) : super(key: key);
 
   BetterPlayerController get activeController {
@@ -26,33 +32,25 @@ class ButtonControls extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Pause Button
-        IconButton(
-          icon: Icon(Icons.pause),
-          onPressed: () {
-            if (activeController.isPlaying() ?? false) {
-              activeController.pause();
-            } else {
-              activeController.play();
-            }
-          },
-        ),
-
         // Loop Button
         IconButton(
-          icon: const Icon(Icons.loop),
-          onPressed: () {
-            final loopingEnabled =
-                activeController.betterPlayerConfiguration.looping;
-            // Use a workaround for enabling/disabling looping
-            activeController.setLooping(!loopingEnabled);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
-              ),
-            );
-          },
+          icon: Icon(
+            Icons.loop,
+            color: isLoopingEnabled
+                ? Colors.red
+                : Colors.black, // Change icon color based on loop state
+          ),
+          onPressed: toggleLooping, // Call the passed toggle function
+        ),
+
+        // Pause Button
+        IconButton(
+          icon: Icon(
+            activeController.isPlaying() ?? false
+                ? Icons.pause
+                : Icons.play_arrow,
+          ),
+          onPressed: togglePlayPause,
         ),
         // Playback Speed Button
         IconButton(
