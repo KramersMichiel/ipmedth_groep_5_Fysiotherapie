@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:video_player/video_player.dart';
-import '/views/bodyAnalysisPage.dart';
 import '/views/video_player_page.dart'; // Add this line
 
 class VideoImportPage extends StatefulWidget {
