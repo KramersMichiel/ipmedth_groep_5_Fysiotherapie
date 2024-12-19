@@ -174,7 +174,7 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
             alignment: Alignment.bottomCenter,
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 80),
+                padding: const EdgeInsets.only(bottom: 0),
                 child: ButtonControls(
                   controller1: _controller1,
                   controller2: _controller2,
