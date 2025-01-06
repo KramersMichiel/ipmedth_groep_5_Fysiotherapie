@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/ButtonControls.dart';
+import 'dart:io';
 
 class VideoPlayerPage extends StatefulWidget {
   final String? videoPath1;
@@ -124,7 +125,12 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                   Offstage(
                     offstage: isPlayingFirstVideo,
                     child: SizedBox.expand(
-                      child: BetterPlayer(controller: _controller2!),
+                      child: SizedBox.expand(
+                      child: BetterPlayer(controller: _controller1),
+                      // child: Image.file(/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/
+                      //   File('frame.png'),
+                      //   fit: BoxFit.cover,
+                      ),
                     ),
                   ),
               ],

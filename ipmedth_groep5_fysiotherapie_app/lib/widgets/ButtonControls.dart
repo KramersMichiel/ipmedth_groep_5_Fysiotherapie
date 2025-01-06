@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class ButtonControls extends StatelessWidget {
   final BetterPlayerController controller1;
@@ -7,17 +10,39 @@ class ButtonControls extends StatelessWidget {
   final bool isPlayingFirstVideo;
 
   const ButtonControls({
-    Key? key,
+    super.key,
     required this.controller1,
     this.controller2,
     required this.isPlayingFirstVideo,
-  }) : super(key: key);
+  });
 
   BetterPlayerController get activeController {
     if (isPlayingFirstVideo || controller2 == null) {
       return controller1;
     } else {
       return controller2!;
+    }
+  }
+
+  void _captureFrame() async {
+    final videoPlayerController = activeController.videoPlayerController;
+    if (videoPlayerController != null) {
+      final position = await videoPlayerController.position;
+      if (position != null) {
+        final ffmpeg = FlutterFFmpeg();
+        final inputPath = activeController.betterPlayerDataSource?.url;
+        final directory = await getApplicationDocumentsDirectory();
+        final outputPath = '${directory.path}/frame.png'; // Change this to your desired output path
+        final command = ' -y -i $inputPath -ss ${position.inSeconds} -vframes 1 $outputPath';
+        await ffmpeg.execute(command);
+        print('Frame captured at $outputPath');
+        // Use a logging framework instead of print
+        // print('Frame captured at $outputPath');
+        // Example using a logging framework
+        // log('Frame captured at $outputPath');
+        //log the path
+        // print('Frame captured at $outputPath');
+      }
     }
   }
 
@@ -28,10 +53,12 @@ class ButtonControls extends StatelessWidget {
       children: [
         // Pause Button
         IconButton(
-          icon: Icon(Icons.pause),
+          icon: const Icon(Icons.pause),
           onPressed: () {
             if (activeController.isPlaying() ?? false) {
               activeController.pause();
+              _captureFrame();
+              print('paused');
             } else {
               activeController.play();
             }
