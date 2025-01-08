@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
 import 'views/videoImportPage.dart';
 import 'widgets/helpDialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(
@@ -64,13 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: Colors.blue.shade50, // Lichtblauw, nog ENV VAR maken
+      backgroundColor: const Color(0xFFE3F0F4), // Lichtblauw, nog ENV VAR maken
       body: SafeArea(
         child: Stack(
           children: [
             Positioned(
-              top: 16,
-              right: 16,
+              top: 12,
+              right: 12,
               child: IconButton(
                 iconSize: 64,
                 icon: Icon(Icons.help_outline),
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Image.asset(
-                      'assets/images/logo_tekst.png',
+                      'assets/images/logo_tekst2x.png',
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -106,24 +107,39 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 64,
-                        vertical: 32,
+                        vertical: 28,
                       ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [
-                            Color(0xFF64B5F6),
-                            Color(0xFF1976D2),
+                            Color(0xFF77BFDC),
+                            Color(0xFF76A9BE),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ),
-                        borderRadius: BorderRadius.circular(32),
+                        borderRadius: BorderRadius.circular(64),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Colors.black.withOpacity(0.5), // Shadow color
+                            blurRadius: 4, // Spread of the shadow
+                            offset:
+                                Offset(0, 4), // Position of the shadow (x, y)
+                          ),
+                        ],
                       ),
                       child: const Text(
-                        'Start Analyse',
+                        'Start analyse',
                         style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
+                          fontFamily: 'Lato-regular',
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
                         ),
                       ),
                     ),
