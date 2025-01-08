@@ -51,7 +51,7 @@ class bodyTrackingManager extends ChangeNotifier{
   }
 
   void _setLandmark(PoseLandmarkType type, double x, double y, double zoom){
-    _landmarks[type] = Landmark(x, y, zoom);
+    _landmarks[type] = Landmark(x, y, zoom, type);
     String printding = "${type}: ${_landmarks[type]!.x},${_landmarks[type]!.y}";
       print(printding);
   }

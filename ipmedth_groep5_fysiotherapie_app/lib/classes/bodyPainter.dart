@@ -8,7 +8,7 @@ import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dar
 
 //this is the class to paint the body landmarks and other required visualisations(body lines, angles) on a given image
 class bodyPainter extends CustomPainter {
-  bodyPainter(this.image, this.pose, this.angles, this.isSideView, this.offset, [this.zoom = 1]);
+  bodyPainter(this.image, this.pose, this.angles, this.isSideView, this.offset, this.isDown, [this.zoom = 1]);
 
   final ui.Image image;
   final Map<PoseLandmarkType,Landmark> pose;
@@ -16,6 +16,7 @@ class bodyPainter extends CustomPainter {
   final bool isSideView;
   final double zoom;
   final Offset offset;
+  final bool isDown;
 
   @override
   void paint(Canvas canvas, Size size){
@@ -164,7 +165,7 @@ class bodyPainter extends CustomPainter {
   //When this returns true it will repaint
   @override
   bool shouldRepaint(covariant bodyPainter oldDelegate){
-    return oldDelegate.image != image || oldDelegate.pose != pose || oldDelegate.angles != angles || oldDelegate.offset != offset;
+    return oldDelegate.image != image || oldDelegate.pose != pose || oldDelegate.angles != angles || oldDelegate.offset != offset || isDown;
   }
 }
 
