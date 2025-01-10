@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
 import 'views/videoImportPage.dart';
 import 'widgets/helpDialog.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(
