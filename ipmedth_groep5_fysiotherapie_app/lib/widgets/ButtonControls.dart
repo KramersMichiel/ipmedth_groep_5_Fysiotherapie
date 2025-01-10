@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class ButtonControls extends StatelessWidget {
   final BetterPlayerController controller1;
   final BetterPlayerController? controller2;
   final bool isPlayingFirstVideo;
-  final VoidCallback togglePlayPause;
-  final bool isLoopingEnabled; // Receive the loop state
-  final VoidCallback toggleLooping;
 
   const ButtonControls({
-    Key? key,
+    super.key,
     required this.controller1,
     this.controller2,
     required this.isPlayingFirstVideo,
-    required this.togglePlayPause,
-    required this.isLoopingEnabled, // Receive the loop state
-    required this.toggleLooping,
-  }) : super(key: key);
+  });
 
   BetterPlayerController get activeController {
     if (isPlayingFirstVideo || controller2 == null) {
@@ -27,30 +24,62 @@ class ButtonControls extends StatelessWidget {
     }
   }
 
+  void _captureFrame() async {
+    final videoPlayerController = activeController.videoPlayerController;
+    if (videoPlayerController != null) {
+      final position = await videoPlayerController.position;
+      if (position != null) {
+        final ffmpeg = FlutterFFmpeg();
+        final inputPath = activeController.betterPlayerDataSource?.url;
+        final directory = await getApplicationDocumentsDirectory();
+        final outputPath = '${directory.path}/frame.png'; // Change this to your desired output path
+        final command = ' -y -i $inputPath -ss ${position.inSeconds} -vframes 1 $outputPath';
+        await ffmpeg.execute(command);
+        print('Frame captured at $outputPath');
+        // Use a logging framework instead of print
+        // print('Frame captured at $outputPath');
+        // Example using a logging framework
+        // log('Frame captured at $outputPath');
+        //log the path
+        // print('Frame captured at $outputPath');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Loop Button
-        IconButton(
-          icon: Icon(
-            Icons.loop,
-            color: isLoopingEnabled
-                ? Colors.red
-                : Colors.black, // Change icon color based on loop state
-          ),
-          onPressed: toggleLooping, // Call the passed toggle function
-        ),
-
         // Pause Button
         IconButton(
-          icon: Icon(
-            activeController.isPlaying() ?? false
-                ? Icons.pause
-                : Icons.play_arrow,
-          ),
-          onPressed: togglePlayPause,
+          icon: const Icon(Icons.pause),
+          onPressed: () {
+            if (activeController.isPlaying() ?? false) {
+              activeController.pause();
+              _captureFrame();
+              print('paused');
+            } else {
+              activeController.play();
+            }
+          },
+        ),
+
+        // Loop Button
+        IconButton(
+          icon: const Icon(Icons.loop),
+          onPressed: () {
+            final loopingEnabled =
+                activeController.betterPlayerConfiguration.looping;
+            // Use a workaround for enabling/disabling looping
+            activeController.setLooping(!loopingEnabled);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
+              ),
+            );
+          },
         ),
         // Playback Speed Button
         IconButton(
