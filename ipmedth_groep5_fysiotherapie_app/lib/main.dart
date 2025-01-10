@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/modelTestPage.dart';
-import 'package:ipmedth_groep5_fysiotherapie_app/views/tempLandingPage.dart';
 import 'package:provider/provider.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/colorManager.dart';
 import 'views/videoImportPage.dart';
@@ -66,75 +64,91 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        backgroundColor: Colors.blue.shade50, // Lichtblauw, nog ENV VAR maken
-        body: SafeArea(
-          child: Stack(
-            children: [
-              Positioned(
-                top: 16,
-                right: 16,
-                child: IconButton(
-                  iconSize: 64,
-                  icon: Icon(Icons.help_outline),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => HelpDialog(),
-                    );
-                  },
-                ),
+      backgroundColor: const Color(0xFFE3F0F4), // Lichtblauw, nog ENV VAR maken
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Positioned(
+              top: 12,
+              right: 12,
+              child: IconButton(
+                iconSize: 64,
+                icon: Icon(Icons.help_outline),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => HelpDialog(),
+                  );
+                },
               ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Image.asset(
-                        'assets/images/logo_tekst.png',
-                        fit: BoxFit.contain,
+            ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Image.asset(
+                      'assets/images/logo_tekst2x.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 80),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VideoImportPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 64,
+                        vertical: 28,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF77BFDC),
+                            Color(0xFF76A9BE),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        borderRadius: BorderRadius.circular(64),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Colors.black.withOpacity(0.5), // Shadow color
+                            blurRadius: 4, // Spread of the shadow
+                            offset:
+                                Offset(0, 4), // Position of the shadow (x, y)
+                          ),
+                        ],
+                      ),
+                      child: const Text(
+                        'Start analyse',
+                        style: TextStyle(
+                          fontFamily: 'Lato-regular',
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 80),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VideoImportPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 64,
-                          vertical: 32,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFF64B5F6),
-                              Color(0xFF1976D2),
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        child: const Text(
-                          'Start Analyse',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

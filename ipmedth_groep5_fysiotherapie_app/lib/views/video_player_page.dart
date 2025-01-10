@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/ButtonControls.dart';
 
 class VideoPlayerPage extends StatefulWidget {
   final String? videoPath1;
@@ -15,12 +16,11 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   late BetterPlayerController _controller1;
   BetterPlayerController? _controller2;
   bool isPlayingFirstVideo = true;
+  bool isLoopingEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    print('Received Video Path 1: ${widget.videoPath1}');
-    print('Received Video Path 2: ${widget.videoPath2}');
     if (widget.videoPath1 != null) {
       _controller1 = _createController(widget.videoPath1!);
     }
@@ -31,7 +31,12 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
 
   BetterPlayerController _createController(String videoPath) {
     return BetterPlayerController(
-      const BetterPlayerConfiguration(),
+      const BetterPlayerConfiguration(
+          autoPlay: false,
+          aspectRatio: 9 / 16,
+          controlsConfiguration: BetterPlayerControlsConfiguration(
+            showControls: false,
+          )),
       betterPlayerDataSource: BetterPlayerDataSource(
         BetterPlayerDataSourceType.file,
         videoPath,
@@ -45,6 +50,35 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
     });
   }
 
+  void toggleLooping() {
+    setState(() {
+      isLoopingEnabled = !isLoopingEnabled;
+      _controller1.setLooping(isLoopingEnabled); // Apply loop to controller 1
+      if (_controller2 != null) {
+        _controller2!.setLooping(
+            isLoopingEnabled); // Apply loop to controller 2 if it exists
+      }
+    });
+  }
+
+  void togglePlayPause() {
+    setState(() {
+      if (isPlayingFirstVideo) {
+        if (_controller1.isPlaying() ?? false) {
+          _controller1.pause();
+        } else {
+          _controller1.play();
+        }
+      } else {
+        if (_controller2?.isPlaying() ?? false) {
+          _controller2?.pause();
+        } else {
+          _controller2?.play();
+        }
+      }
+    });
+  }
+
   @override
   void dispose() {
     _controller1.dispose();
@@ -55,47 +89,85 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Video Player'),
-        actions: [
-          if (widget.videoPath2 !=
-              null) // Show toggle only if second video exists
-            IconButton(
-              icon: const Icon(Icons.swap_horiz),
-              onPressed: toggleVideo,
-            ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Stack(
         children: [
-          if (widget.videoPath1 != null && widget.videoPath1!.isNotEmpty) ...[
-            const Text(
-              'First Video',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          // Full-screen video stack
+          Positioned.fill(
+            child: Stack(
+              children: [
+                if (widget.videoPath1 != null)
+                  Offstage(
+                    offstage: !isPlayingFirstVideo,
+                    child: SizedBox.expand(
+                      child: BetterPlayer(controller: _controller1),
+                    ),
+                  ),
+                if (widget.videoPath2 != null)
+                  Offstage(
+                    offstage: isPlayingFirstVideo,
+                    child: SizedBox.expand(
+                      child: BetterPlayer(controller: _controller2!),
+                    ),
+                  ),
+              ],
             ),
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: BetterPlayer(controller: _controller1),
+          ),
+          // Custom back button
+          Positioned(
+            top: 20, // Adjust for safe area if needed
+            left: 10,
+            child: SafeArea(
+              child: IconButton(
+                icon:
+                    const Icon(Icons.arrow_back, color: Colors.white, size: 30),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-            if (widget.videoPath2 != null && widget.videoPath2!.isNotEmpty) ...[
-              const Divider(height: 20, thickness: 2),
-              const Text(
-                'Second Video',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          // Toggle button at the bottom
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("First Video",
+                        style: TextStyle(color: Colors.white)),
+                    Switch(
+                      value: isPlayingFirstVideo,
+                      onChanged: (value) {
+                        toggleVideo();
+                      },
+                    ),
+                    const Text("Second Video",
+                        style: TextStyle(color: Colors.white)),
+                  ],
+                ),
               ),
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: BetterPlayer(controller: _controller2!),
+            ),
+          ),
+          // Button controls at the center bottom
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 0),
+                child: ButtonControls(
+                  controller1: _controller1,
+                  controller2: _controller2,
+                  isPlayingFirstVideo: isPlayingFirstVideo,
+                  togglePlayPause: togglePlayPause,
+                  isLoopingEnabled: isLoopingEnabled, // Pass the looping state
+                  toggleLooping: toggleLooping,
+                ),
               ),
-            ],
-            if (widget.videoPath2 == null || widget.videoPath2!.isEmpty) ...[
-              const Text(
-                'No Second Video Available',
-                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-              ),
-            ],
-          ],
+            ),
+          ),
         ],
       ),
     );
