@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/classes/landmark.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+import 'dart:ui' as ui;
 
 //singleton that has the bodytracker and can be called to do all the actions involving that
 class bodyTrackingManager extends ChangeNotifier{
@@ -25,7 +26,13 @@ class bodyTrackingManager extends ChangeNotifier{
 
   bool hasPose = false;
 
+  ui.Image? _uiImage;
+
   PageState _dragState = PageState.dragScreen;
+
+  ui.Image getImage(){
+    return _uiImage!;
+  }
 
   PageState switchDragState(){
     switch(_dragState){
@@ -36,6 +43,10 @@ class bodyTrackingManager extends ChangeNotifier{
         _dragState = PageState.dragScreen;
         return _dragState;
     }
+  }
+
+  bool getPoseState(){
+    return hasPose;
   }
 
   PageState getDragState(){
@@ -69,12 +80,17 @@ class bodyTrackingManager extends ChangeNotifier{
     calculateAngles(pose);
     hasPose = true;
     notifyListeners();
+    print(_uiImage);
+    print(getPoseState());
   }
 
   //Takes an input image as file and runs the machine learning model on it
   //returns the found landmarks from the first person found
   void analysePose(File image) async{
+    print("");
     final InputImage inputImage = InputImage.fromFile(image);
+    var data = await image.readAsBytes();
+    _uiImage = await decodeImageFromList(data);
     final poses = await _detector.processImage(inputImage);
     _setLandmarks(poses[0]); 
   }

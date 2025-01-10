@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/ButtonControls.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyAnalasysDisplay.dart';
 import 'dart:io';
+
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyAnalysisMenu.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
+import 'package:provider/provider.dart';
 
 class VideoPlayerPage extends StatefulWidget {
   final String? videoPath1;
@@ -18,6 +23,7 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   BetterPlayerController? _controller2;
   bool isPlayingFirstVideo = true;
   bool isLoopingEnabled = false;
+  final bodyTrackingManager bodyManager = bodyTrackingManager();
 
   @override
   void initState() {
@@ -90,10 +96,16 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: 
+      
+      ChangeNotifierProvider(
+      create: (context) => bodyTrackingManager(),
+      child:Stack(
         children: [
           // Full-screen video stack
-          Positioned.fill(
+          bodyManager.getPoseState()
+          ?Bodyanalasysdisplay()
+          :Positioned.fill(
             child: Stack(
               children: [
                 if (widget.videoPath1 != null)
@@ -108,7 +120,7 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                     offstage: isPlayingFirstVideo,
                     child: SizedBox.expand(
                       child: SizedBox.expand(
-                      child: BetterPlayer(controller: _controller1),
+                      child: BetterPlayer(controller: _controller2!),
                       // child: Image.file(/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/
                       //   File('frame.png'),
                       //   fit: BoxFit.cover,
@@ -160,22 +172,23 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
           // Button controls at the center bottom
           Align(
             alignment: Alignment.bottomCenter,
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 0),
-                child: ButtonControls(
-                  controller1: _controller1,
-                  controller2: _controller2,
-                  isPlayingFirstVideo: isPlayingFirstVideo,
-                  togglePlayPause: togglePlayPause,
-                  isLoopingEnabled: isLoopingEnabled, // Pass the looping state
-                  toggleLooping: toggleLooping,
-                ),
-              ),
-            ),
+            child: BodyAnalysisMenu()
+            // child: SafeArea(
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(bottom: 0),
+            //     child: ButtonControls(
+            //       controller1: _controller1,
+            //       controller2: _controller2,
+            //       isPlayingFirstVideo: isPlayingFirstVideo,
+            //       // togglePlayPause: togglePlayPause,
+            //       // isLoopingEnabled: isLoopingEnabled, // Pass the looping state
+            //       // toggleLooping: toggleLooping,
+            //     ),
+            //   ),
+            // ),
           ),
         ],
-      ),
+      ),)
     );
   }
 }
