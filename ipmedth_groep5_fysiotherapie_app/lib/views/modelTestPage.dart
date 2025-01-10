@@ -17,15 +17,10 @@ class modelTestPage extends StatefulWidget {
 class _modelTestPageState extends State<modelTestPage> {
   final bodyTrackingManager bodyManager = bodyTrackingManager();
 
-  Pose? pose;
-  Map<LandmarkAngle,double>? angles;
   ui.Image? image;
   File? imageFile;
-  //Because the landmarks in the recieved pose cant be altered it is unfortunately needed to make a seperate variable that is alterable
-  Map<PoseLandmarkType,Map<newPoseElement,double>> newPose = {};
   //govern the state of the analasys display widget
   String stateText = "pan";
-  PageState curState = PageState.dragScreen;
 
   final ImagePicker grabber = ImagePicker();
 
@@ -38,7 +33,7 @@ class _modelTestPageState extends State<modelTestPage> {
       
       final ui.Image convertedImage = await _loadImage(grabbedImageFile);
       print(convertedImage.width);
-      print(convertedImage.height);
+      print(grabbedImageFile);
       setState((){
         image = convertedImage;
         imageFile = grabbedImageFile;
@@ -50,18 +45,7 @@ class _modelTestPageState extends State<modelTestPage> {
   //stores them in the state as a pose variable
   void analyseImage() async{
     if(imageFile != null){
-      final List<Pose> poses = await bodyManager.analysePose(imageFile!);
-      print(poses[0]);
-      setState((){
-        pose = poses[0];
-        angles = bodyManager.calculateAngles(poses[0]);
-        //prints the coordinates per landmark for testing purposes
-        pose!.landmarks.forEach((_, landmark) {
-          String printding = "${landmark.type}: ${landmark.x},${landmark.y},${landmark.z} ${landmark.likelihood}";
-          print(printding);
-          newPose[landmark.type] = {newPoseElement.x:landmark.x, newPoseElement.y:landmark.y, newPoseElement.zoom:1};
-        }); 
-      });
+      bodyManager.analysePose(imageFile!);
     }
   }
 
@@ -73,15 +57,14 @@ class _modelTestPageState extends State<modelTestPage> {
 
   //Switch between the drag states of the analasys display
   void switchState(){
+    PageState curState = bodyManager.switchDragState();
     setState((){
       switch(curState){
         case PageState.dragLandmark:
-          curState = PageState.dragScreen;
-          stateText = "pan";
+          stateText = "drag";
           break;
         case PageState.dragScreen:
-          curState = PageState.dragLandmark;
-          stateText = "drag";
+          stateText = "pan";
           break;
       }
     });
@@ -100,7 +83,7 @@ class _modelTestPageState extends State<modelTestPage> {
               width: MediaQuery.of(context).size.width*0.9,
               child: 
               image != null
-              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!, pose: pose, angles: angles, newPose: newPose, dragMode: curState,)
+              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!)
               :DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.black
