@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 
 class BodyAnalysisMenu extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
   bool isOpen = false;
   late AnimationController _controller;
   late Animation<double> _animation;
+  final bodyTrackingManager bodyManager = bodyTrackingManager();
 
   @override
   void initState() {
@@ -39,6 +43,12 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
         _controller.reverse();
       }
     });
+    _toggleAnalysis();
+  }
+
+  void _toggleAnalysis(){
+    bodyManager.analysePose(File("/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png"));
+
   }
 
   @override
@@ -52,7 +62,11 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
             alignment: Alignment.bottomRight,
             children: [
               _buildOption(Icons.color_lens, 0),
-              _buildOption(Icons.camera, 1),
+              FloatingActionButton(
+                onPressed: _toggleAnalysis,
+                child: Icon(Icons.camera),
+              ),
+              // _buildOption(Icons.camera, 1),
               _buildOption(Icons.zoom_in, 2),
               FloatingActionButton(
                 onPressed: _toggleMenu,

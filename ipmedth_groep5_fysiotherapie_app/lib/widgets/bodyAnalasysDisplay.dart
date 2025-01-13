@@ -11,10 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:collection/src/iterable_extensions.dart';
 
 class Bodyanalasysdisplay extends StatefulWidget {
-  const Bodyanalasysdisplay({super.key, required this.image, required this.imageFile});
+  const Bodyanalasysdisplay({super.key});
 
-  final ui.Image image;
-  final File imageFile;
 
   @override
   State<Bodyanalasysdisplay> createState() => _BodyanalasysdisplayState();
@@ -27,6 +25,9 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   bool isSideView = true;
   double zoom = 1;
+
+  final ui.Image image = bodyTrackingManager().getImage()!;
+  final File imageFile = File("/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png");
 
   Offset offset = Offset(0,0);
   Offset minOffset = Offset(0,0);
@@ -65,19 +66,22 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   //util function to detail the drag start details
   void _down(DragStartDetails details, Map<PoseLandmarkType,Landmark> landmarks){
-    setState((){
-      isDown = true;
-      dragX = details.localPosition.dx;
-      dragY = details.localPosition.dy;
-    });
+    if(image != null){
+      setState((){
+        isDown = true;
+        dragX = details.localPosition.dx;
+        dragY = details.localPosition.dy;
+      });
 
-    final width = MediaQuery.of(context).size.width*0.9;
-    double ratio = width/widget.image.width;
-    targetId ??=landmarks.keys
-      .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
-    if(targetId != null){
-      print("Target: $targetId");
+      final width = MediaQuery.of(context).size.width*0.9;
+      double ratio = width/image!.width;
+      targetId ??=landmarks.keys
+        .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
+      if(targetId != null){
+        print("Target: $targetId");
+      }
     }
+    
   }
 
   void _up(){
@@ -122,11 +126,11 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height*0.9;
-    final width = MediaQuery.of(context).size.width*0.9;
-    double ratio = width/widget.image.width;
-    double maxWidth = widget.image.width*-1*(zoom-1) * ratio;
-    double maxHeight = widget.image.height*-1*(zoom-1) * ratio;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    double ratio = width/image.width;
+    double maxWidth = image.width*-1*(zoom-1) * ratio;
+    double maxHeight = image.height*-1*(zoom-1) * ratio;
     Map<PoseLandmarkType,Landmark> landmarks = Provider.of<bodyTrackingManager>(context).getLandmarks();
     
 
@@ -170,10 +174,10 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
               //Also currently uses that same size, hardcoded in this section to size the canvas
               //Gives a custompaint, which uses the given image and pose to draw the image with the given landmarks as a canvas
               child: 
-                CustomPaint(painter: bodyPainter(widget.image, landmarks, Provider.of<bodyTrackingManager>(context).getAngles()!, isSideView, offset, isDown, zoom),child: Container(),)
+                CustomPaint(painter: bodyPainter(image, landmarks, Provider.of<bodyTrackingManager>(context).getAngles()!, isSideView, offset, isDown, zoom),child: Container(),)
               ),
           )
-          :RawImage(image: widget.image),
+          :RawImage(image: image),
       ),
     );
   }

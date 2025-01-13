@@ -45,7 +45,7 @@ class _modelTestPageState extends State<modelTestPage> {
   //stores them in the state as a pose variable
   void analyseImage() async{
     if(imageFile != null){
-      bodyManager.analysePose(imageFile!);
+      //bodyManager.analysePose(imageFile!);
     }
   }
 
@@ -83,7 +83,7 @@ class _modelTestPageState extends State<modelTestPage> {
               width: MediaQuery.of(context).size.width*0.9,
               child: 
               image != null
-              ?Bodyanalasysdisplay(image: image!, imageFile: imageFile!)
+              ?Bodyanalasysdisplay()
               :DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.black
