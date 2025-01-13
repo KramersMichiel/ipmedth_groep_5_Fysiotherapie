@@ -30,8 +30,8 @@ class bodyTrackingManager extends ChangeNotifier{
 
   PageState _dragState = PageState.dragScreen;
 
-  ui.Image getImage(){
-    return _uiImage!;
+  ui.Image? getImage(){
+    return _uiImage;
   }
 
   PageState switchDragState(){
@@ -81,18 +81,24 @@ class bodyTrackingManager extends ChangeNotifier{
     hasPose = true;
     notifyListeners();
     print(_uiImage);
+    print("testtest");
     print(getPoseState());
   }
 
   //Takes an input image as file and runs the machine learning model on it
   //returns the found landmarks from the first person found
   void analysePose(File image) async{
-    print("");
-    final InputImage inputImage = InputImage.fromFile(image);
-    var data = await image.readAsBytes();
-    _uiImage = await decodeImageFromList(data);
-    final poses = await _detector.processImage(inputImage);
-    _setLandmarks(poses[0]); 
+    if(hasPose){
+      hasPose = false;
+      notifyListeners();
+    }
+    else{
+      final InputImage inputImage = InputImage.fromFile(image);
+      var data = await image.readAsBytes();
+      _uiImage = await decodeImageFromList(data);
+      final poses = await _detector.processImage(inputImage);
+      _setLandmarks(poses[0]);
+    }
   }
 
   //function for finding all the required body angles from a given persons found bodyparts

@@ -26,7 +26,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   bool isSideView = true;
   double zoom = 1;
 
-  final ui.Image image = bodyTrackingManager().getImage();
+  final ui.Image image = bodyTrackingManager().getImage()!;
   final File imageFile = File("/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png");
 
   Offset offset = Offset(0,0);
@@ -66,19 +66,22 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   //util function to detail the drag start details
   void _down(DragStartDetails details, Map<PoseLandmarkType,Landmark> landmarks){
-    setState((){
-      isDown = true;
-      dragX = details.localPosition.dx;
-      dragY = details.localPosition.dy;
-    });
+    if(image != null){
+      setState((){
+        isDown = true;
+        dragX = details.localPosition.dx;
+        dragY = details.localPosition.dy;
+      });
 
-    final width = MediaQuery.of(context).size.width*0.9;
-    double ratio = width/image.width;
-    targetId ??=landmarks.keys
-      .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
-    if(targetId != null){
-      print("Target: $targetId");
+      final width = MediaQuery.of(context).size.width*0.9;
+      double ratio = width/image!.width;
+      targetId ??=landmarks.keys
+        .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
+      if(targetId != null){
+        print("Target: $targetId");
+      }
     }
+    
   }
 
   void _up(){
@@ -123,8 +126,8 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height*0.9;
-    final width = MediaQuery.of(context).size.width*0.9;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     double ratio = width/image.width;
     double maxWidth = image.width*-1*(zoom-1) * ratio;
     double maxHeight = image.height*-1*(zoom-1) * ratio;

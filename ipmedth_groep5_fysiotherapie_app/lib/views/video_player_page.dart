@@ -95,29 +95,33 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: 
-      
-      ChangeNotifierProvider(
+    return ChangeNotifierProvider(
       create: (context) => bodyTrackingManager(),
-      child:Stack(
+      child:Scaffold(
+      body: 
+      Stack(
         children: [
           // Full-screen video stack
-          bodyManager.getPoseState()
-          ?Bodyanalasysdisplay()
-          :Positioned.fill(
+          Positioned.fill(
             child: Stack(
               children: [
+                Offstage(
+                  offstage: !Provider.of<bodyTrackingManager>(context).getPoseState(),
+                  child: Provider.of<bodyTrackingManager>(context).getPoseState()
+                  ?Bodyanalasysdisplay()
+                  :Container()
+                  //child:Bodyanalasysdisplay(),
+                ),
                 if (widget.videoPath1 != null)
                   Offstage(
-                    offstage: !isPlayingFirstVideo,
+                    offstage: !isPlayingFirstVideo || Provider.of<bodyTrackingManager>(context).getPoseState(),
                     child: SizedBox.expand(
                       child: BetterPlayer(controller: _controller1),
                     ),
                   ),
                 if (widget.videoPath2 != null)
                   Offstage(
-                    offstage: isPlayingFirstVideo,
+                    offstage: isPlayingFirstVideo || Provider.of<bodyTrackingManager>(context).getPoseState(),
                     child: SizedBox.expand(
                       child: SizedBox.expand(
                       child: BetterPlayer(controller: _controller2!),
