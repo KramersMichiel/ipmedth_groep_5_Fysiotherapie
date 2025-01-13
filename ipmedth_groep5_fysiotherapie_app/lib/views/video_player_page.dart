@@ -167,9 +167,9 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                   controller1: _controller1,
                   controller2: _controller2,
                   isPlayingFirstVideo: isPlayingFirstVideo,
-                  togglePlayPause: togglePlayPause,
-                  isLoopingEnabled: isLoopingEnabled, // Pass the looping state
-                  toggleLooping: toggleLooping,
+                  // togglePlayPause: togglePlayPause,
+                  // isLoopingEnabled: isLoopingEnabled, // Pass the looping state
+                  // toggleLooping: toggleLooping,
                 ),
               ),
             ),
