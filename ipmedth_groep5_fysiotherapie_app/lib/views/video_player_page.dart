@@ -108,7 +108,7 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                 Offstage(
                   offstage: !Provider.of<bodyTrackingManager>(context).getPoseState(),
                   child: Provider.of<bodyTrackingManager>(context).getPoseState()
-                  ?Bodyanalasysdisplay()
+                  ?const Bodyanalasysdisplay()
                   :Container()
                   //child:Bodyanalasysdisplay(),
                 ),
@@ -176,7 +176,11 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
           // Button controls at the center bottom
           Align(
             alignment: Alignment.bottomCenter,
-            child: BodyAnalysisMenu()
+            child: BodyAnalysisMenu(
+              controller1: _controller1,
+                  controller2: _controller2,
+                  isPlayingFirstVideo: isPlayingFirstVideo,
+            )
             // child: SafeArea(
             //   child: Padding(
             //     padding: const EdgeInsets.only(bottom: 0),

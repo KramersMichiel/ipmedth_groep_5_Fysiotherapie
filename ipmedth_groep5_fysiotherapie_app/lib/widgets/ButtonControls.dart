@@ -24,7 +24,7 @@ class ButtonControls extends StatelessWidget {
     }
   }
 
-  void _captureFrame() async {
+  void captureFrame() async {
     final videoPlayerController = activeController.videoPlayerController;
     if (videoPlayerController != null) {
       final position = await videoPlayerController.position;
@@ -57,7 +57,7 @@ class ButtonControls extends StatelessWidget {
           onPressed: () {
             if (activeController.isPlaying() ?? false) {
               activeController.pause();
-              _captureFrame();
+              captureFrame();
               print('paused');
             } else {
               activeController.play();
