@@ -4,7 +4,7 @@ import 'package:better_player_plus/better_player_plus.dart';
 class VideoPlayerPage extends StatelessWidget {
   final String videoPath;
 
-  VideoPlayerPage({required this.videoPath});
+  const VideoPlayerPage({super.key, required this.videoPath});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class VideoPlayerPage extends StatelessWidget {
     try {
       final BetterPlayerController betterPlayerController =
           BetterPlayerController(
-        BetterPlayerConfiguration(),
+        const BetterPlayerConfiguration(),
         betterPlayerDataSource: BetterPlayerDataSource(
           BetterPlayerDataSourceType.file,
           videoPath,
@@ -22,7 +22,7 @@ class VideoPlayerPage extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
-          title: Text('Video Player'),
+          title: const Text('Video Player'),
         ),
         body: Center(
           child: AspectRatio(
@@ -37,9 +37,9 @@ class VideoPlayerPage extends StatelessWidget {
       print("Error initializing BetterPlayer: $e");
       return Scaffold(
         appBar: AppBar(
-          title: Text('Error'),
+          title: const Text('Error'),
         ),
-        body: Center(
+        body: const Center(
           child: Text('Failed to initialize the video player.'),
         ),
       );

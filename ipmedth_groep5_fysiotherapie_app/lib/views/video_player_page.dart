@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/ButtonControls.dart';
-import 'dart:io';
 
 class VideoPlayerPage extends StatefulWidget {
   final String? videoPath1;
@@ -167,9 +166,9 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                   controller1: _controller1,
                   controller2: _controller2,
                   isPlayingFirstVideo: isPlayingFirstVideo,
-                  //togglePlayPause: togglePlayPause,
-                  //isLoopingEnabled: isLoopingEnabled, // Pass the looping state
-                  //toggleLooping: toggleLooping,
+                  togglePlayPause: togglePlayPause,
+                  isLoopingEnabled: isLoopingEnabled, // Pass the looping state
+                  toggleLooping: toggleLooping,
                 ),
               ),
             ),

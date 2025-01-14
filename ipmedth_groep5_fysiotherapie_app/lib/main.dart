@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,6 +22,8 @@ class MyApp extends StatelessWidget {
 }
 
 class UploadVideoPage extends StatefulWidget {
+  const UploadVideoPage({super.key});
+
   @override
   _UploadVideoPageState createState() => _UploadVideoPageState();
 }
@@ -52,12 +56,12 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Video'),
+        title: const Text('Upload Video'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: _pickVideo,
-          child: Text('Upload Video'),
+          child: const Text('Upload Video'),
         ),
       ),
     );
