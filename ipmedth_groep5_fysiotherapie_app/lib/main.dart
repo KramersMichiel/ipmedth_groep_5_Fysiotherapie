@@ -46,7 +46,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => VideoPlayerPage(videoPath: _videoPath!),
+          builder: (context) => VideoPlayerPage(videoPath1: _videoPath!),
         ),
       );
     }

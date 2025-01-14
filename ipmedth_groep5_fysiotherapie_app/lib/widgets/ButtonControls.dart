@@ -6,18 +6,18 @@ class ButtonControls extends StatelessWidget {
   final BetterPlayerController? controller2;
   final bool isPlayingFirstVideo;
   final VoidCallback togglePlayPause;
-  final bool isLoopingEnabled; // Receive the loop state
+  final bool isLoopingEnabled;
   final VoidCallback toggleLooping;
 
   const ButtonControls({
-    super.key,
+    Key? key,
     required this.controller1,
     this.controller2,
     required this.isPlayingFirstVideo,
     required this.togglePlayPause,
-    required this.isLoopingEnabled, // Receive the loop state
+    required this.isLoopingEnabled,
     required this.toggleLooping,
-  });
+  }) : super(key: key);
 
   BetterPlayerController get activeController {
     if (isPlayingFirstVideo || controller2 == null) {
@@ -25,6 +25,20 @@ class ButtonControls extends StatelessWidget {
     } else {
       return controller2!;
     }
+  }
+
+  void skipOneFrameForward() {
+    final currentPosition =
+        activeController.videoPlayerController?.value.position ?? Duration.zero;
+    activeController.seekTo(currentPosition +
+        const Duration(milliseconds: 42)); // Approx. one frame
+  }
+
+  void skipOneFrameBackward() {
+    final currentPosition =
+        activeController.videoPlayerController?.value.position ?? Duration.zero;
+    activeController.seekTo(currentPosition -
+        const Duration(milliseconds: 42)); // Approx. one frame
   }
 
   @override
@@ -36,22 +50,16 @@ class ButtonControls extends StatelessWidget {
         IconButton(
           icon: Icon(
             Icons.loop,
-            color: isLoopingEnabled
-                ? Colors.red
-                : Colors.black, // Change icon color based on loop state
+            color: isLoopingEnabled ? Colors.red : Colors.black,
           ),
-          onPressed: toggleLooping, // Call the passed toggle function
+          onPressed: toggleLooping,
         ),
-
-        // Skip Backward Button (One Frame)
+        // Skip Backward Button
         IconButton(
           icon: const Icon(Icons.skip_previous),
-          onPressed: () {
-            skipFrame(context, backward: true);
-          },
+          onPressed: skipOneFrameBackward,
         ),
-
-        // Pause/Play Button
+        // Pause Button
         IconButton(
           icon: Icon(
             activeController.isPlaying() ?? false
@@ -60,15 +68,11 @@ class ButtonControls extends StatelessWidget {
           ),
           onPressed: togglePlayPause,
         ),
-
-        // Skip Forward Button (One Frame)
+        // Skip Forward Button
         IconButton(
           icon: const Icon(Icons.skip_next),
-          onPressed: () {
-            skipFrame(context, backward: false);
-          },
+          onPressed: skipOneFrameForward,
         ),
-
         // Playback Speed Button
         IconButton(
           icon: const Icon(Icons.speed),
@@ -99,23 +103,5 @@ class ButtonControls extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void skipFrame(BuildContext context, {required bool backward}) async {
-    // Get the current position of the video
-    final currentPosition =
-        await activeController.videoPlayerController!.position;
-    if (currentPosition == null) return;
-
-    // Frame duration assuming 30 FPS
-    const frameDuration = Duration(milliseconds: 33);
-
-    // Calculate the new position
-    final newPosition = backward
-        ? currentPosition - frameDuration
-        : currentPosition + frameDuration;
-
-    // Seek to the new position
-    activeController.seekTo(newPosition);
   }
 }
