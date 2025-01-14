@@ -46,36 +46,72 @@ class ButtonControls extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Loop Button
-        IconButton(
-          icon: Icon(
-            Icons.loop,
-            color: isLoopingEnabled ? Colors.red : Colors.black,
+        // Loop Button wrapped in a container
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color:
+                isLoopingEnabled ? Colors.red.shade100 : Colors.grey.shade200,
           ),
-          onPressed: toggleLooping,
+          child: IconButton(
+            icon: Icon(
+              Icons.loop,
+              color: isLoopingEnabled ? Colors.red : Colors.black,
+              size: 30, // Adjust icon size
+            ),
+            onPressed: toggleLooping,
+          ),
         ),
-        // Skip Backward Button
-        IconButton(
-          icon: const Icon(Icons.skip_previous),
-          onPressed: skipOneFrameBackward,
+
+        // Skip Backward Button wrapped in a container
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blue.shade100,
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.skip_previous,
+              size: 30, // Adjust icon size
+              color: Colors.blue,
+            ),
+            onPressed: skipOneFrameBackward,
+          ),
         ),
-        // Pause Button
+
+        // Play/Pause Button
         IconButton(
           icon: Icon(
             activeController.isPlaying() ?? false
                 ? Icons.pause
                 : Icons.play_arrow,
+            size: 30, // Adjust icon size
           ),
           onPressed: togglePlayPause,
         ),
-        // Skip Forward Button
-        IconButton(
-          icon: const Icon(Icons.skip_next),
-          onPressed: skipOneFrameForward,
+
+        // Skip Forward Button wrapped in a container
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blue.shade100,
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.skip_next,
+              size: 30, // Adjust icon size
+              color: Colors.blue,
+            ),
+            onPressed: skipOneFrameForward,
+          ),
         ),
+
         // Playback Speed Button
         IconButton(
-          icon: const Icon(Icons.speed),
+          icon: const Icon(
+            Icons.speed,
+            size: 30, // Adjust icon size
+          ),
           onPressed: () {
             showPlaybackSpeedDialog(context);
           },
