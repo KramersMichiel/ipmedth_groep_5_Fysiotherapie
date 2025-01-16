@@ -92,9 +92,9 @@ class _VideoImportPageState extends State<VideoImportPage> {
       child: Container(
         width: 300,
         height: 200,
-        color: Colors.grey[300],
+        color: const Color(0xFFE3F0F4),
         child: videoFile == null
-            ? Icon(Icons.video_library, size: 100, color: Colors.grey[700])
+            ? const Icon(Icons.add_box, size: 100, color: Colors.black)
             : (controller != null && controller.value.isInitialized
                 ? const Icon(Icons.check_circle, size: 100, color: Colors.green)
                 : const Icon(Icons.error,
@@ -106,10 +106,24 @@ class _VideoImportPageState extends State<VideoImportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade50,
+      backgroundColor: const Color(0xFFE3F0F4),
       body: SafeArea(
         child: Stack(
           children: [
+            Positioned(
+              top: 16,
+              left: 16,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // Goes back to the previous screen
+                },
+              ),
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -118,14 +132,16 @@ class _VideoImportPageState extends State<VideoImportPage> {
                 Center(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    child: const Divider(),
+                    child: const Divider(
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
                 _videoPlaceholder(2, _videoFile2, _videoController2),
                 const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: _videoFile1 != null
+                InkWell(
+                  onTap: _videoFile1 != null
                       ? () {
                           print('Video Path 1: ${_videoFile1?.path}');
                           print('Video Path 2: ${_videoFile2?.path}');
@@ -136,23 +152,48 @@ class _VideoImportPageState extends State<VideoImportPage> {
                           }
                         }
                       : null, // Disable button if no video is selected
-                  child: const Text('Analyze Videos'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 64,
+                      vertical: 28,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF77BFDC),
+                          Color(0xFF76A9BE),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(64),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5), // Shadow color
+                          blurRadius: 4, // Spread of the shadow
+                          offset: Offset(0, 4), // Position of the shadow (x, y)
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'Analyseer beelden',
+                      style: TextStyle(
+                        fontFamily: 'Lato-regular',
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                        color: _videoFile1 != null
+                            ? Colors.black
+                            : Colors
+                                .grey, // Text color based on enabled/disabled
+                      ),
+                    ),
+                  ),
                 ),
               ],
-            ),
-            Positioned(
-              bottom: 16,
-              left: 16,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  size: 40,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.pop(context); // Goes back to the previous screen
-                },
-              ),
             ),
           ],
         ),

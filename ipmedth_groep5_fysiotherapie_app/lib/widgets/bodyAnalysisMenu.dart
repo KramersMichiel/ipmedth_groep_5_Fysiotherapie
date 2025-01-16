@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'package:better_player_plus/better_player_plus.dart';
@@ -25,40 +24,24 @@ class BodyAnalysisMenu extends StatefulWidget {
 class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
     with SingleTickerProviderStateMixin {
   bool isOpen = false;
-  late AnimationController _controller;
-  late Animation<double> _animation;
   final bodyTrackingManager bodyManager = bodyTrackingManager();
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 250),
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   void _toggleMenu() {
     setState(() {
       isOpen = !isOpen;
-      if (isOpen) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
     });
-    _toggleAnalysis();
   }
+
+  // Test functions for each button
+  void _handleButton1() {
+    print('Button 1 pressed - Color Lens');
+  }
+
 
   void _toggleAnalysis() async {
     
@@ -102,50 +85,64 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.bottomRight,
       children: [
+        // Background overlay when menu is open
+        if (isOpen)
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: _toggleMenu,
+              child: Container(color: Colors.black.withOpacity(0.5)),
+            ),
+          ),
+        // Buttons and Menu
         Positioned(
           bottom: 30,
           right: 30,
-          child: Stack(
-            alignment: Alignment.bottomRight,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              _buildOption(Icons.color_lens, 0),
+              // Button 1
+              if (isOpen)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: FloatingActionButton(
+                    heroTag: 'btn1',
+                    onPressed: () => print('testbutton1'),
+                    child: Icon(Icons.analytics_sharp),
+                  ),
+                ),
+              // Button 2
+              if (isOpen)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: FloatingActionButton(
+                    heroTag: 'btn2',
+                    onPressed: () => print('testbutton2'),
+                    child: Icon(Icons.color_lens),
+                  ),
+                ),
+              // Button 3
+              if (isOpen)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: FloatingActionButton(
+                    heroTag: 'btn3',
+                    onPressed: () => print('testbutton3'),
+                    child: Icon(Icons.zoom_in),
+                  ),
+                ),
+              // Main Menu Button
               FloatingActionButton(
-                onPressed: _toggleAnalysis,
-                child: const Icon(Icons.camera),
-              ),
-              // _buildOption(Icons.camera, 1),
-              _buildOption(Icons.zoom_in, 2),
-              FloatingActionButton(
+                heroTag: 'menu',
                 onPressed: _toggleMenu,
-                child: const Icon(Icons.settings),
+                child: Icon(isOpen ? Icons.close : Icons.settings),
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildOption(IconData icon, int index) {
-    final double angle = index * 45.0;
-    final double rad = angle * (3.1415926535897932 / 180.0);
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset.fromDirection(
-              rad - 3.1415926535897932, _animation.value * 100),
-          child: Transform.scale(
-            scale: _animation.value,
-            child: FloatingActionButton(
-              mini: true,
-              onPressed: () {},
-              child: Icon(icon),
-            ),
-          ),
-        );
-      },
     );
   }
 }
