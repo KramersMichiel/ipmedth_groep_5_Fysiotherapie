@@ -83,7 +83,8 @@ class _modelTestPageState extends State<modelTestPage> {
               width: MediaQuery.of(context).size.width*0.9,
               child: 
               image != null
-              ?Bodyanalasysdisplay()
+              ?Container()
+              // ?Bodyanalasysdisplay()
               :DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.black

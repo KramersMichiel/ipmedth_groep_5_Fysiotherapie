@@ -11,8 +11,10 @@ import 'package:provider/provider.dart';
 import 'package:collection/src/iterable_extensions.dart';
 
 class Bodyanalasysdisplay extends StatefulWidget {
-  const Bodyanalasysdisplay({super.key});
+  const Bodyanalasysdisplay({super.key, required this.height, required this.width});
 
+  final height;
+  final width;
 
   @override
   State<Bodyanalasysdisplay> createState() => _BodyanalasysdisplayState();
@@ -126,9 +128,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    double ratio = width/image.width;
+    double ratio = widget.width/image.width;
     double maxWidth = image.width*-1*(zoom-1) * ratio;
     double maxHeight = image.height*-1*(zoom-1) * ratio;
     Map<PoseLandmarkType,Landmark> landmarks = Provider.of<bodyTrackingManager>(context).getLandmarks();
@@ -169,8 +169,8 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
             child: SizedBox(
               //currently uses very large size coded in the widget itself to size itself
-              height: height,
-              width: width,
+              height: widget.height,
+              width: widget.width,
               //Also currently uses that same size, hardcoded in this section to size the canvas
               //Gives a custompaint, which uses the given image and pose to draw the image with the given landmarks as a canvas
               child: 

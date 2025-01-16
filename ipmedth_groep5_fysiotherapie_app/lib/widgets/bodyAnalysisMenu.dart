@@ -109,7 +109,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: FloatingActionButton(
                     heroTag: 'btn1',
-                    onPressed: () => print('testbutton1'),
+                    onPressed: _toggleAnalysis,
                     child: Icon(Icons.analytics_sharp),
                   ),
                 ),

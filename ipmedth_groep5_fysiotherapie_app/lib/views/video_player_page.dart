@@ -108,7 +108,11 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                 Offstage(
                   offstage: !Provider.of<bodyTrackingManager>(context).getPoseState(),
                   child: Provider.of<bodyTrackingManager>(context).getPoseState()
-                  ?const Bodyanalasysdisplay()
+                  ?LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints){
+                      return Bodyanalasysdisplay(height: constraints.maxHeight, width: constraints.maxWidth);
+                    }
+                  )
                   :Container()
                   //child:Bodyanalasysdisplay(),
                 ),
