@@ -119,7 +119,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: FloatingActionButton(
                     heroTag: 'btn2',
-                    onPressed: () => print('testbutton2'),
+                    onPressed: bodyManager.switchDragState,
                     child: Icon(Icons.color_lens),
                   ),
                 ),
