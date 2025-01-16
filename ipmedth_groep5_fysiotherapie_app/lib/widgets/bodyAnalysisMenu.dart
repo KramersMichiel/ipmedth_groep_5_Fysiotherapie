@@ -44,7 +44,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
 
 
   void _toggleAnalysis() async {
-    
+    bodyManager.setIsSideView(activeController == widget.controller1);
     await captureFrame();
     bodyManager.analysePose(File("/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png"));
   }

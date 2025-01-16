@@ -26,9 +26,19 @@ class bodyTrackingManager extends ChangeNotifier{
 
   bool hasPose = false;
 
+  bool _isSideView = true;
+
   ui.Image? _uiImage;
 
   PageState _dragState = PageState.dragScreen;
+
+  void setIsSideView(bool isSideView){
+    _isSideView = isSideView;
+  }
+
+  bool getIsSideView(){
+    return _isSideView;
+  }
 
   ui.Image? getImage(){
     return _uiImage;

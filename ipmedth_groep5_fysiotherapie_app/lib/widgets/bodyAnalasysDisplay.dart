@@ -25,7 +25,6 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   
   Debouncer debounce = Debouncer(milliseconds: 500);
 
-  bool isSideView = true;
   double zoom = 1;
 
   final ui.Image image = bodyTrackingManager().getImage()!;
@@ -33,7 +32,6 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   Offset offset = Offset(0,0);
   Offset minOffset = Offset(0,0);
-  // Offset maxOffset = Offset(widget.image.width.toDouble(), );
 
   //vars for drag and drop
   bool isDown = false;
@@ -60,12 +58,6 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
       ..addOval(Rect.fromCircle(
         center: Offset(landmark.x, landmark.y), radius: radius));
       Offset fixedOffset = fixOffset(Offset(dx, dy), widthRatio, heightRatio);
-      print(Offset(landmark.x, landmark.y));
-      print(widthRatio);
-      print(heightRatio);
-      print(Offset(dx, dy));
-      print(fixedOffset);
-      print(landmark.type);
       return _tempPath.contains(fixedOffset);
   }
 
@@ -97,32 +89,14 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
 //momenteel is ratio op x en y fucked, verder moet de drag constant werken en niet alleen elke halve seconde
 //dus de point selectie moet op down gebeuren waarna de drag alleen dit punt verplaatst.
-  void _move(DragUpdateDetails details, Map<PoseLandmarkType,Landmark> landmarks){
+  void _move(DragUpdateDetails details, Map<PoseLandmarkType,Landmark> landmarks, double widthRatio, double heightRatio){
     if(isDown){
-      print("moving");
       print(targetId);
       if(targetId != null){
-        // landmark.x = landmark.x + details.delta.dx;
-        // landmark.y = landmark.y + details.delta.dy;
-        print("moving landmark");
         setState((){
-          
-
-          landmarks[targetId]!.x = landmarks[targetId]!.x + details.delta.dx;
-          landmarks[targetId]!.y = landmarks[targetId]!.y + details.delta.dy;
+          landmarks[targetId]!.x = landmarks[targetId]!.x + details.delta.dx / widthRatio;
+          landmarks[targetId]!.y = landmarks[targetId]!.y + details.delta.dy / heightRatio;
         });
-        //   // if(debounce.ifNotRunningRun()){
-        //   //   final width = MediaQuery.of(context).size.width*0.9;
-        //   //   double ratio = width/widget.image.width;
-        //   //   targetId ??=landmarks.keys
-        //   //     .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
-        //   //   if(targetId != null){
-        //   //     print(targetId);
-        //   //     landmarks[targetId]!.x = returnXorYRatio(dragX, ratio);
-        //   //     landmarks[targetId]!.y = returnXorYRatio(dragY, ratio);
-        //   //   }
-        //   // }
-        // });
       }
     }
   }
@@ -130,15 +104,15 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   @override
   Widget build(BuildContext context) {
+    bool isSideView = bodyManager.getIsSideView();
+
     double height = widget.height;
     double width = widget.width;
-    print(height);
-    print(width);
+    
     double widthRatio = widget.width/image.width;
-    print(widthRatio);
+    
     double heightRatio = widget.height / image.height;
-    print(heightRatio);
-    print(height * widthRatio);
+    
     if(image.height * widthRatio > widget.height){
       width = image.width * heightRatio;
       widthRatio = width / image.width;
@@ -170,7 +144,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
                 }
                 else if(bodyManager.getDragState() == PageState.dragLandmark){
                   print(targetId);
-                  _move(details, landmarks);
+                  _move(details, landmarks, widthRatio, heightRatio);
                 }
               });
             },
