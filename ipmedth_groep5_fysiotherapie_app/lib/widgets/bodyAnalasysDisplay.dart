@@ -43,7 +43,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   final double radius = 10;
 
   Offset fixOffset(Offset fingerOffset, double ratio){
-    fingerOffset = fingerOffset / ratio;
+    fingerOffset = Offset(fingerOffset.dx/ratio, fingerOffset.dy/(widget.height * ratio/image.height));
 
     return fingerOffset;
   }
@@ -61,6 +61,8 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
         center: Offset(landmark.x, landmark.y), radius: radius));
       Offset fixedOffset = fixOffset(Offset(dx, dy), ratio);
       print(Offset(landmark.x, landmark.y));
+      print(ratio);
+      print(Offset(dx, dy));
       print(fixedOffset);
       print(landmark.type);
       return _tempPath.contains(fixedOffset);
@@ -75,8 +77,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
         dragY = details.localPosition.dy;
       });
 
-      final width = MediaQuery.of(context).size.width*0.9;
-      double ratio = width/image!.width;
+      double ratio = widget.width/image!.width;
       targetId ??=landmarks.keys
         .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
       if(targetId != null){

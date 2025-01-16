@@ -42,6 +42,10 @@ class bodyPainter extends CustomPainter {
     //This also ensures the landmarks and other visualisations are always displayed correctly on the body
     Size imageSize = Size(image.width.toDouble(),image.height.toDouble());
 
+    print(size);
+    print(imageSize);
+    print(size.width / imageSize.width);
+
     //is fucked, heeft iets met het feit dat het inverted is te maken.
     //de grootte van de image is inverse aan zijn grootte?? de offset moet inverted zijn??
     Rect imageRect = offset * -1 *(imageSize.height / size.height) *(1/zoom) & imageSize * (1/zoom);
