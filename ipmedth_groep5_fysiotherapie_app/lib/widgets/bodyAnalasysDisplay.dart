@@ -42,8 +42,8 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   PoseLandmarkType? targetId;
   final double radius = 10;
 
-  Offset fixOffset(Offset fingerOffset, double ratio){
-    fingerOffset = Offset(fingerOffset.dx/ratio, fingerOffset.dy/(widget.height * ratio/image.height));
+  Offset fixOffset(Offset fingerOffset, double widthRatio, double heightRatio){
+    fingerOffset = Offset(fingerOffset.dx/widthRatio, fingerOffset.dy/heightRatio);
 
     return fingerOffset;
   }
@@ -54,14 +54,15 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   }
 
   //util function to determine if a landmark is inside the user drag circle
-  bool isInObject(Landmark landmark, double dx, double dy, double ratio){
+  bool isInObject(Landmark landmark, double dx, double dy, double widthRatio, double heightRatio){
     
     Path _tempPath = Path()
       ..addOval(Rect.fromCircle(
         center: Offset(landmark.x, landmark.y), radius: radius));
-      Offset fixedOffset = fixOffset(Offset(dx, dy), ratio);
+      Offset fixedOffset = fixOffset(Offset(dx, dy), widthRatio, heightRatio);
       print(Offset(landmark.x, landmark.y));
-      print(ratio);
+      print(widthRatio);
+      print(heightRatio);
       print(Offset(dx, dy));
       print(fixedOffset);
       print(landmark.type);
@@ -69,7 +70,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   }
 
   //util function to detail the drag start details
-  void _down(DragStartDetails details, Map<PoseLandmarkType,Landmark> landmarks){
+  void _down(DragStartDetails details, Map<PoseLandmarkType,Landmark> landmarks, double widthRatio, double heightRatio){
     if(image != null){
       setState((){
         isDown = true;
@@ -77,9 +78,8 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
         dragY = details.localPosition.dy;
       });
 
-      double ratio = widget.width/image!.width;
       targetId ??=landmarks.keys
-        .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, ratio));
+        .firstWhereOrNull((PoseLandmarkType type) => isInObject(landmarks[type]!, dragX, dragY, widthRatio, heightRatio));
       if(targetId != null){
         print("Target: $targetId");
       }
@@ -129,9 +129,26 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
   @override
   Widget build(BuildContext context) {
-    double ratio = widget.width/image.width;
-    double maxWidth = image.width*-1*(zoom-1) * ratio;
-    double maxHeight = image.height*-1*(zoom-1) * ratio;
+    double height = widget.height;
+    double width = widget.width;
+    print(height);
+    print(width);
+    double widthRatio = widget.width/image.width;
+    print(widthRatio);
+    double heightRatio = widget.height / image.height;
+    print(heightRatio);
+    print(height * widthRatio);
+    if(image.height * widthRatio > widget.height){
+      width = image.width * heightRatio;
+      widthRatio = width / image.width;
+    }
+    else{
+      height = image.height * widthRatio;
+      heightRatio = height / image.height;
+    }
+
+    double maxWidth = image.width*-1*(zoom-1) * widthRatio;
+    double maxHeight = image.height*-1*(zoom-1) * widthRatio;
     Map<PoseLandmarkType,Landmark> landmarks = Provider.of<bodyTrackingManager>(context).getLandmarks();
     
 
@@ -158,7 +175,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
             },
             onPanStart:(details){
               if(bodyManager.getDragState() == PageState.dragLandmark){
-                _down(details, landmarks);
+                _down(details, landmarks, widthRatio, heightRatio);
                 
               }
             },
@@ -170,8 +187,8 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
 
             child: SizedBox(
               //currently uses very large size coded in the widget itself to size itself
-              height: widget.height * ratio,
-              width: widget.width,
+              height: height,
+              width: width,
               //Also currently uses that same size, hardcoded in this section to size the canvas
               //Gives a custompaint, which uses the given image and pose to draw the image with the given landmarks as a canvas
               child: 
