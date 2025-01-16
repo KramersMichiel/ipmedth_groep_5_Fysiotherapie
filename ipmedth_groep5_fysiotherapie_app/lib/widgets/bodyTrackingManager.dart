@@ -77,7 +77,7 @@ class bodyTrackingManager extends ChangeNotifier{
       // print(printding);
       _setLandmark(landmark.type, landmark.x, landmark.y, 1);
     });
-    calculateAngles(pose);
+    calculateAngles();
     hasPose = true;
     notifyListeners();
     print(_uiImage);
@@ -102,23 +102,23 @@ class bodyTrackingManager extends ChangeNotifier{
   }
 
   //function for finding all the required body angles from a given persons found bodyparts
-  void calculateAngles(Pose pose){
+  void calculateAngles(){
     //convert two landmarks into a vector
     Vector2 makeVector2d(PoseLandmarkType point1Type, PoseLandmarkType point2Type){
-      final PoseLandmark point1 = pose.landmarks[point1Type]!;
-      final PoseLandmark point2 = pose.landmarks[point2Type]!;
+      final Landmark point1 = _landmarks[point1Type]!;
+      final Landmark point2 = _landmarks[point2Type]!;
       return Vector2(point2.x - point1.x, point2.y - point1.y);
     }
 
     //Makes a vector between a landmark and a virtual point
     Vector2 makeVector2dVirtual(PoseLandmarkType point1Type, Map<String,double> virtualPoint){
-      final PoseLandmark point1 = pose.landmarks[point1Type]!;
+      final Landmark point1 = _landmarks[point1Type]!;
       return Vector2(virtualPoint['x']! - point1.x, virtualPoint['y']! - point1.y);
     }
 
     //takes the x of point 1 and the y of point 2 to make a virtual point for angle calculations with only two points
     Map<String,double> makeVirtualPoint(PoseLandmarkType point1Type, PoseLandmarkType point2Type){
-      return {'x': pose.landmarks[point1Type]!.x, 'y': pose.landmarks[point2Type]!.y};
+      return {'x': _landmarks[point1Type]!.x, 'y': _landmarks[point2Type]!.y};
     }
 
     //takes three landmarks and calculate the angle between them
@@ -133,7 +133,7 @@ class bodyTrackingManager extends ChangeNotifier{
     //Therefore one vector is from the lowest point to the highest and the other vector from the lowest point to
     //a point directly below the higher point on the y of the lower point
     double getAngle2dVirtualHorizontal(PoseLandmarkType point1, PoseLandmarkType point2){
-      final bool point1IsHigher = pose.landmarks[point1]!.y == pose.landmarks[point2]!.y;
+      final bool point1IsHigher = _landmarks[point1]!.y == _landmarks[point2]!.y;
       Map<String,double> virtualPoint = makeVirtualPoint(point2, point1);
       PoseLandmarkType higherPoint = point2;
       PoseLandmarkType lowerPoint = point1;

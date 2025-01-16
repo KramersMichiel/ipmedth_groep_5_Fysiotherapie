@@ -91,6 +91,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
     setState((){
       isDown = false;
       targetId = null;
+      bodyManager.calculateAngles();
     });
   }
 
