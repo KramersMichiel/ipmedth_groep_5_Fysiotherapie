@@ -109,7 +109,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: GestureDetector(
-                    onTap: () => print('testbutton1'),
+                    onTap: _toggleAnalysis,
                     child: Container(
                       width: 56,
                       height: 56,
