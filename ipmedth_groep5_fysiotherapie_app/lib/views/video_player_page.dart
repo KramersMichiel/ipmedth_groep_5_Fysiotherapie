@@ -5,6 +5,7 @@ import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyAnalasysDisplay.dar
 import 'dart:io';
 
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyAnalysisMenu.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/TimelineDisplay.dart';
 import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'package:provider/provider.dart';
 
@@ -52,9 +53,14 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   }
 
   void toggleVideo() {
-    setState(() {
-      isPlayingFirstVideo = !isPlayingFirstVideo;
-    });
+    if (widget.videoPath1 != null && widget.videoPath2 != null) {
+      setState(() {
+        isPlayingFirstVideo = !isPlayingFirstVideo;
+        print('Switch toggled: $isPlayingFirstVideo');
+      });
+    } else {
+      print('Both video paths must be valid to switch videos.');
+    }
   }
 
   void toggleLooping() {
@@ -95,110 +101,140 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: 
-      Stack(
-        children: [
-          // Full-screen video stack
-          Positioned.fill(
-            child: Stack(
-              children: [
-                Offstage(
-                  offstage: !Provider.of<bodyTrackingManager>(context).getPoseState(),
-                  child: Provider.of<bodyTrackingManager>(context).getPoseState()
-                  ?LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints){
-                      return Bodyanalasysdisplay(height: constraints.maxHeight, width: constraints.maxWidth);
-                    }
-                  )
-                  :Container()
-                  //child:Bodyanalasysdisplay(),
-                ),
-                if (widget.videoPath1 != null)
-                  Offstage(
-                    offstage: !isPlayingFirstVideo || Provider.of<bodyTrackingManager>(context).getPoseState(),
-                    child: SizedBox.expand(
-                      child: BetterPlayer(controller: _controller1),
-                    ),
-                  ),
-                if (widget.videoPath2 != null)
-                  Offstage(
-                    offstage: isPlayingFirstVideo || Provider.of<bodyTrackingManager>(context).getPoseState(),
-                    child: SizedBox.expand(
-                      child: SizedBox.expand(
-                      child: BetterPlayer(controller: _controller2!),
-                      // child: Image.file(/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/
-                      //   File('frame.png'),
-                      //   fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          // Custom back button
-          Positioned(
-            top: 20, // Adjust for safe area if needed
-            left: 10,
-            child: SafeArea(
-              child: IconButton(
-                icon:
-                    const Icon(Icons.arrow_back, color: Colors.white, size: 30),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ),
-          // Toggle button at the bottom
-          Positioned(
-            bottom: 30,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return ChangeNotifierProvider(
+        create: (context) => bodyTrackingManager(),
+        child: Scaffold(
+          body: Stack(
+            children: [
+              // Full-screen video stack
+              Positioned(
+                child: Stack(
                   children: [
-                    const Text("First Video",
-                        style: TextStyle(color: Colors.white)),
-                    Switch(
-                      value: isPlayingFirstVideo,
-                      onChanged: (value) {
-                        toggleVideo();
-                      },
-                    ),
-                    const Text("Second Video",
-                        style: TextStyle(color: Colors.white)),
+                    Offstage(
+                        offstage: !Provider.of<bodyTrackingManager>(context)
+                            .getPoseState(),
+                        child: Provider.of<bodyTrackingManager>(context)
+                                .getPoseState()
+                            ? LayoutBuilder(builder: (BuildContext context,
+                                BoxConstraints constraints) {
+                                return Bodyanalasysdisplay(
+                                    height: constraints.maxHeight,
+                                    width: constraints.maxWidth);
+                              })
+                            : Container()
+                        //child:Bodyanalasysdisplay(),
+                        ),
+                    if (widget.videoPath1 != null)
+                      Offstage(
+                        offstage: !isPlayingFirstVideo ||
+                            Provider.of<bodyTrackingManager>(context)
+                                .getPoseState(),
+                        child: SizedBox.expand(
+                          child: widget.videoPath1 != null
+                              ? BetterPlayer(controller: _controller1)
+                              : const SizedBox.shrink(), // Provide a fallback
+                        ),
+                      ),
+                    if (widget.videoPath2 != null)
+                      Offstage(
+                        offstage: isPlayingFirstVideo ||
+                            Provider.of<bodyTrackingManager>(context)
+                                .getPoseState(),
+                        child: SizedBox.expand(
+                          child: SizedBox.expand(
+                            child: BetterPlayer(controller: _controller2!),
+                            // child: Image.file(/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/
+                            //   File('frame.png'),
+                            //   fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
-            ),
+              // Custom back button
+              Positioned(
+                top: 20, // Adjust for safe area if needed
+                left: 10,
+                child: SafeArea(
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.black, size: 30),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ),
+
+              // --------------------------------------------------------
+
+              // Toggle button at the bottom
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: Colors.black,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: double.infinity,
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Switch(
+                            value: isPlayingFirstVideo,
+                            onChanged: (value) {
+                              toggleVideo();
+                            },
+                          ),
+                        ),
+                        // Timeline
+                        Expanded(
+                            flex: 3,
+                            child: TimelineDisplay(
+                              controller1: _controller1,
+                              controller2: _controller2,
+                              isPlayingFirstVideo: isPlayingFirstVideo,
+                            )),
+                        // Button controls
+                        Expanded(
+                          flex: 5,
+                          child: ButtonControls(
+                            controller1: _controller1,
+                            controller2: _controller2,
+                            isPlayingFirstVideo: isPlayingFirstVideo,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Body analysis menu
+
+              Positioned(
+                  child: BodyAnalysisMenu(
+                controller1: _controller1,
+                controller2: _controller2,
+                isPlayingFirstVideo: isPlayingFirstVideo,
+              )
+                  // child: SafeArea(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(bottom: 0),
+                  //     child: ButtonControls(
+                  //       controller1: _controller1,
+                  //       controller2: _controller2,
+                  //       isPlayingFirstVideo: isPlayingFirstVideo,
+                  //       // togglePlayPause: togglePlayPause,
+                  //       // isLoopingEnabled: isLoopingEnabled, // Pass the looping state
+                  //       // toggleLooping: toggleLooping,
+                  //     ),
+                  //   ),
+                  // ),
+                  ),
+            ],
           ),
-          // Button controls at the center bottom
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: BodyAnalysisMenu(
-              controller1: _controller1,
-                  controller2: _controller2,
-                  isPlayingFirstVideo: isPlayingFirstVideo,
-            )
-            // child: SafeArea(
-            //   child: Padding(
-            //     padding: const EdgeInsets.only(bottom: 0),
-            //     child: ButtonControls(
-            //       controller1: _controller1,
-            //       controller2: _controller2,
-            //       isPlayingFirstVideo: isPlayingFirstVideo,
-            //       // togglePlayPause: togglePlayPause,
-            //       // isLoopingEnabled: isLoopingEnabled, // Pass the looping state
-            //       // toggleLooping: toggleLooping,
-            //     ),
-            //   ),
-            // ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

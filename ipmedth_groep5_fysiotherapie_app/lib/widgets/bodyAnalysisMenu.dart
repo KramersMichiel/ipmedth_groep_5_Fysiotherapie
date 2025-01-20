@@ -15,7 +15,7 @@ class BodyAnalysisMenu extends StatefulWidget {
     required this.controller1,
     this.controller2,
     required this.isPlayingFirstVideo,
-    });
+  });
 
   @override
   _BodyAnalysisMenuState createState() => _BodyAnalysisMenuState();
@@ -42,13 +42,13 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
     print('Button 1 pressed - Color Lens');
   }
 
-
   void _toggleAnalysis() async {
     bodyManager.setIsSideView(activeController == widget.controller1);
     await captureFrame();
-    bodyManager.analysePose(File("/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png"));
+    bodyManager.analysePose(File(
+        "/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png"));
   }
-  
+
   BetterPlayerController get activeController {
     if (widget.isPlayingFirstVideo || widget.controller2 == null) {
       return widget.controller1;
@@ -65,11 +65,13 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
         final ffmpeg = FlutterFFmpeg();
         final inputPath = activeController.betterPlayerDataSource?.url;
         final directory = await getApplicationDocumentsDirectory();
-        final outputPath = '${directory.path}/frame.png'; // Change this to your desired output path
-        final command = ' -y -i $inputPath -ss ${position.inSeconds} -vframes 1 $outputPath';
+        final outputPath =
+            '${directory.path}/frame.png'; // Change this to your desired output path
+        final command =
+            ' -y -i $inputPath -ss ${position.inSeconds} -vframes 1 $outputPath';
         await ffmpeg.execute(command);
         print('Frame captured at $outputPath');
-        
+
         // Use a logging framework instead of print
         // print('Frame captured at $outputPath');
         // Example using a logging framework
@@ -80,7 +82,6 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
     }
     return true;
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +98,8 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
           ),
         // Buttons and Menu
         Positioned(
-          bottom: 30,
-          right: 30,
+          bottom: MediaQuery.of(context).size.height * 0.23,
+          right: MediaQuery.of(context).size.width * 0.05,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -107,37 +108,88 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
               if (isOpen)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: FloatingActionButton(
-                    heroTag: 'btn1',
-                    onPressed: _toggleAnalysis,
-                    child: Icon(Icons.analytics_sharp),
+                  child: GestureDetector(
+                    onTap: () => print('testbutton1'),
+                    child: Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF77BEDB), // Blue background color
+                        shape: BoxShape.circle, // Circular shape
+                        border: Border.all(
+                            color: Colors.black, width: 1), // Black border
+                      ),
+                      child: const Icon(
+                        Icons.analytics_sharp,
+                        color: Colors.black, // White icon color
+                        size: 24,
+                      ),
+                    ),
                   ),
                 ),
               // Button 2
               if (isOpen)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: FloatingActionButton(
-                    heroTag: 'btn2',
-                    onPressed: bodyManager.switchDragState,
-                    child: Icon(Icons.color_lens),
+                  child: GestureDetector(
+                    onTap: () => bodyManager.switchDragState,
+                    child: Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF77BEDB), // Blue background color
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black, width: 1),
+                      ),
+                      child: const Icon(
+                        Icons.open_with,
+                        color: Colors.black,
+                        size: 32,
+                      ),
+                    ),
                   ),
                 ),
               // Button 3
               if (isOpen)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: FloatingActionButton(
-                    heroTag: 'btn3',
-                    onPressed: () => print('testbutton3'),
-                    child: Icon(Icons.zoom_in),
+                  child: GestureDetector(
+                    onTap: () => print('testbutton3'),
+                    child: Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF77BEDB), // Blue background color
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black, width: 1),
+                      ),
+                      child: const Icon(
+                        Icons.zoom_in,
+                        color: Colors.black,
+                        size: 32,
+                      ),
+                    ),
                   ),
                 ),
               // Main Menu Button
-              FloatingActionButton(
-                heroTag: 'menu',
-                onPressed: _toggleMenu,
-                child: Icon(isOpen ? Icons.close : Icons.settings),
+              GestureDetector(
+                onTap: _toggleMenu,
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF77BEDB),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black, width: 1),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      isOpen ? Icons.close : Icons.build,
+                      color: Colors.black,
+                      size: 32,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
