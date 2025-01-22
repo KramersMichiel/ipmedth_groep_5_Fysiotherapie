@@ -132,7 +132,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: GestureDetector(
-                    onTap: () => bodyManager.switchDragState,
+                    onTap: bodyManager.switchDragState,
                     child: Container(
                       width: 56,
                       height: 56,
