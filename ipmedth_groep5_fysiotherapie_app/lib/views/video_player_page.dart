@@ -101,9 +101,7 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => bodyTrackingManager(),
-        child: Scaffold(
+    return Scaffold(
           body: Stack(
             children: [
               // Full-screen video stack
@@ -235,6 +233,6 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
                   ),
             ],
           ),
-        ));
+        );
   }
 }
