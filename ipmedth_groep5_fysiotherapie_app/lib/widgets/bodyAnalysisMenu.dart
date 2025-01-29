@@ -62,13 +62,15 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
     if (videoPlayerController != null) {
       final position = await videoPlayerController.position;
       if (position != null) {
+        //ffmpeg accepteerd seconden om frames te pakken, hierbij accepteren ze wel commagetallen om ook tussen de seconden frames te pakken
+        final double positionMilsSecond = position.inMilliseconds/1000;
         final ffmpeg = FlutterFFmpeg();
         final inputPath = activeController.betterPlayerDataSource?.url;
         final directory = await getApplicationDocumentsDirectory();
         final outputPath =
             '${directory.path}/frame.png'; // Change this to your desired output path
         final command =
-            ' -y -i $inputPath -ss ${position.inSeconds} -vframes 1 $outputPath';
+            ' -y -i $inputPath -ss ${positionMilsSecond} -vframes 1 $outputPath';
         await ffmpeg.execute(command);
         print('Frame captured at $outputPath');
 
