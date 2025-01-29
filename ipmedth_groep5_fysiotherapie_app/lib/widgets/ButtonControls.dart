@@ -21,6 +21,7 @@ class ButtonControls extends StatefulWidget {
 
 class _ButtonControlsState extends State<ButtonControls> {
   late ValueNotifier<bool> isPlayingNotifier;
+  bool isLoopingEnabled = false; // ✅ Voeg deze variabele toe
 
   BetterPlayerController get activeController {
     if (widget.isPlayingFirstVideo || widget.controller2 == null) {
@@ -74,20 +75,17 @@ class _ButtonControlsState extends State<ButtonControls> {
       children: [
         // Loop Button
         IconButton(
-          icon: const Icon(Icons.loop),
-          color: Colors.white,
+          icon: Icon(Icons.loop),
+          color: isLoopingEnabled
+              ? Colors.green
+              : Colors.red, // ✅ Dynamische kleur
           iconSize: 24,
           onPressed: () {
-            final loopingEnabled =
-                activeController.betterPlayerConfiguration.looping;
-            // Use a workaround for enabling/disabling looping
-            activeController.setLooping(!loopingEnabled);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
-              ),
-            );
+            setState(() {
+              isLoopingEnabled = !isLoopingEnabled; // ✅ Toggle loop state
+              activeController
+                  .setLooping(isLoopingEnabled); // ✅ Gebruik activeController
+            });
           },
         ),
         // 0.1 seconds backwards
