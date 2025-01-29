@@ -44,9 +44,15 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
 
   void _toggleAnalysis() async {
     bodyManager.setIsSideView(activeController == widget.controller1);
-    await captureFrame();
-    bodyManager.analysePose(File(
-        "/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png"));
+    if(bodyManager.getPoseState()){
+      bodyManager.setHasPoseFalse();
+    }
+    else{
+      await captureFrame();
+      bodyManager.analysePose(File(
+          "/data/user/0/com.example.ipmedth_groep5_fysiotherapie_app/app_flutter/frame.png"));
+    }
+    
   }
 
   BetterPlayerController get activeController {
@@ -60,6 +66,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
   Future<bool> captureFrame() async {
     final videoPlayerController = activeController.videoPlayerController;
     if (videoPlayerController != null) {
+      videoPlayerController.pause();
       final position = await videoPlayerController.position;
       if (position != null) {
         //ffmpeg accepteerd seconden om frames te pakken, hierbij accepteren ze wel commagetallen om ook tussen de seconden frames te pakken

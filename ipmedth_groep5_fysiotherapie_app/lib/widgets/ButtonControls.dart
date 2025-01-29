@@ -137,7 +137,7 @@ class _ButtonControlsState extends State<ButtonControls> {
               onTap: () {
                 if (isPlaying) {
                   activeController.pause();
-                  captureFrame();
+                  // captureFrame();
                 } else {
                   activeController.play();
                 }

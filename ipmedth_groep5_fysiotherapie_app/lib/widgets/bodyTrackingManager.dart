@@ -69,6 +69,7 @@ class bodyTrackingManager extends ChangeNotifier{
 
   void setHasPoseFalse(){
     hasPose = false;
+    notifyListeners();
   }
 
   void _setLandmark(PoseLandmarkType type, double x, double y, double zoom){
@@ -99,8 +100,7 @@ class bodyTrackingManager extends ChangeNotifier{
   //returns the found landmarks from the first person found
   void analysePose(File image) async{
     if(hasPose){
-      hasPose = false;
-      notifyListeners();
+      setHasPoseFalse();
     }
     else{
       final InputImage inputImage = InputImage.fromFile(image);
