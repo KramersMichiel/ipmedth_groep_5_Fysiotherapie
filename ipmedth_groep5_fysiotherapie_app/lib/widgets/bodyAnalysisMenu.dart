@@ -117,68 +117,95 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
               if (isOpen)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: GestureDetector(
-                    onTap: _toggleAnalysis,
-                    child: Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF77BEDB), // Blue background color
-                        shape: BoxShape.circle, // Circular shape
-                        border: Border.all(
-                            color: Colors.black, width: 1), // Black border
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: _toggleAnalysis,
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF77BEDB), // Blue background color
+                            shape: BoxShape.circle, // Circular shape
+                            border: Border.all(
+                                color: Colors.black, width: 1), // Black border
+                          ),
+                          child: const Icon(
+                            Icons.color_lens,
+                            color: Colors.black, // White icon color
+                            size: 24,
+                          ),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.analytics_sharp,
-                        color: Colors.black, // White icon color
-                        size: 24,
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Analyseer',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ),
-                  ),
+                    ],
+                  )
                 ),
               // Button 2
               if (isOpen)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: GestureDetector(
-                    onTap: bodyManager.switchDragState,
-                    child: Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF77BEDB), // Blue background color
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black, width: 1),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: bodyManager.switchDragState,
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF77BEDB), // Blue background color
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black, width: 1),
+                          ),
+                          child: const Icon(
+                            Icons.open_with,
+                            color: Colors.black,
+                            size: 32,
+                          ),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.open_with,
-                        color: Colors.black,
-                        size: 32,
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Edit Mode',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ),
-                  ),
+                    ],
+                  )
                 ),
               // Button 3
               if (isOpen)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: GestureDetector(
-                    onTap: () => print('testbutton3'),
-                    child: Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF77BEDB), // Blue background color
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black, width: 1),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => print('testbutton3'),
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF77BEDB), // Blue background color
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black, width: 1),
+                          ),
+                          child: const Icon(
+                            Icons.zoom_in,
+                            color: Colors.black,
+                            size: 32,
+                          ),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.zoom_in,
-                        color: Colors.black,
-                        size: 32,
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Zoom',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ),
-                  ),
+                    ],
+                  )
                 ),
               // Main Menu Button
               GestureDetector(
