@@ -54,6 +54,11 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   }
 
   void toggleVideo() {
+    //When changing video sets the display back to video if the analysis widget was being displayed
+    if(bodyManager.getPoseState()){
+      bodyManager.setHasPoseFalse();
+    }
+
     if (widget.videoPath1 != null && widget.videoPath2 != null) {
       setState(() {
         isPlayingFirstVideo = !isPlayingFirstVideo;

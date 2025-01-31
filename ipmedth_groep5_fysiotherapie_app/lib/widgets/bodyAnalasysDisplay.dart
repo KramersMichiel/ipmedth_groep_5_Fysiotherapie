@@ -38,7 +38,7 @@ class _BodyanalasysdisplayState extends State<Bodyanalasysdisplay> {
   double dragX = 0;
   double dragY = 0;
   PoseLandmarkType? targetId;
-  final double radius = 10;
+  final double radius = 20;
 
   Offset fixOffset(Offset fingerOffset, double widthRatio, double heightRatio){
     fingerOffset = Offset(fingerOffset.dx/widthRatio, fingerOffset.dy/heightRatio);

@@ -20,8 +20,8 @@ class ButtonControls extends StatefulWidget {
 }
 
 class _ButtonControlsState extends State<ButtonControls> {
-  late ValueNotifier<bool> isPlayingNotifier;
   bool isLoopingEnabled = false; // ✅ Voeg deze variabele toe
+  bool isPlaying = false;
 
   BetterPlayerController get activeController {
     if (widget.isPlayingFirstVideo || widget.controller2 == null) {
@@ -31,17 +31,27 @@ class _ButtonControlsState extends State<ButtonControls> {
     }
   }
 
+  void pausePlay(){
+    if(activeController.isPlaying()!){
+      activeController.pause();
+      setState((){
+        isPlaying = false;
+      });
+    }
+    else{
+      activeController.play();
+      setState((){
+        isPlaying = true;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     // Initialize ValueNotifier and listen to playback state changes
-    isPlayingNotifier =
-        ValueNotifier<bool>(activeController.isPlaying() ?? false);
-    activeController.videoPlayerController?.addListener(() {
-      final isPlaying = activeController.isPlaying() ?? false;
-      isPlayingNotifier.value = isPlaying;
-    });
+  
   }
 
   void captureFrame() async {
@@ -130,18 +140,8 @@ class _ButtonControlsState extends State<ButtonControls> {
         // ),
 
         // Play/Pause button
-        ValueListenableBuilder<bool>(
-          valueListenable: isPlayingNotifier,
-          builder: (context, isPlaying, child) {
-            return GestureDetector(
-              onTap: () {
-                if (isPlaying) {
-                  activeController.pause();
-                  captureFrame();
-                } else {
-                  activeController.play();
-                }
-              },
+          GestureDetector(
+              onTap: pausePlay,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -154,9 +154,8 @@ class _ButtonControlsState extends State<ButtonControls> {
                   size: 36,
                 ),
               ),
-            );
-          },
-        ),
+            )
+          ,
 
         // Go 0.1 seconds forward button
         IconButton(
