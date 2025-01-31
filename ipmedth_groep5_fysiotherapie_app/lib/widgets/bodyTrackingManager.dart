@@ -48,9 +48,11 @@ class bodyTrackingManager extends ChangeNotifier{
     switch(_dragState){
       case PageState.dragScreen:
         _dragState = PageState.dragLandmark;
+        notifyListeners();
         return _dragState;
       case PageState.dragLandmark:
         _dragState = PageState.dragScreen;
+        notifyListeners();
         return _dragState;
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ButtonControls extends StatefulWidget {
@@ -20,6 +21,8 @@ class ButtonControls extends StatefulWidget {
 }
 
 class _ButtonControlsState extends State<ButtonControls> {
+  final bodyManager = bodyTrackingManager();
+
   bool isLoopingEnabled = false; // ✅ Voeg deze variabele toe
   bool isPlaying = false;
 
@@ -39,6 +42,9 @@ class _ButtonControlsState extends State<ButtonControls> {
       });
     }
     else{
+      if(bodyManager.getPoseState()){
+        bodyManager.setHasPoseFalse();
+      }
       activeController.play();
       setState((){
         isPlaying = true;

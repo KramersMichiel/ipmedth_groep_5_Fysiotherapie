@@ -4,6 +4,7 @@ import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dar
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class BodyAnalysisMenu extends StatefulWidget {
   final BetterPlayerController controller1;
@@ -54,6 +55,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
     }
     
   }
+  
 
   BetterPlayerController get activeController {
     if (widget.isPlayingFirstVideo || widget.controller2 == null) {
@@ -123,7 +125,9 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF77BEDB), // Blue background color
+                        color: Provider.of<bodyTrackingManager>(context).getPoseState()
+                        ?Colors.green
+                        :const Color(0xFF77BEDB), // Blue background color
                         shape: BoxShape.circle, // Circular shape
                         border: Border.all(
                             color: Colors.black, width: 1), // Black border
@@ -146,7 +150,9 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF77BEDB), // Blue background color
+                        color: Provider.of<bodyTrackingManager>(context).getDragState() == PageState.dragLandmark
+                        ?Colors.green
+                        :const Color(0xFF77BEDB), // Blue background color
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.black, width: 1),
                       ),
