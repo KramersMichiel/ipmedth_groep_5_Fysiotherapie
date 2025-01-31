@@ -90,25 +90,12 @@ class _ButtonControlsState extends State<ButtonControls> {
               ? Colors.green
               : Colors.red, // ✅ Dynamische kleur
           iconSize: 24,
-          onPressed: () async {
-            final position =
-                await activeController.videoPlayerController?.position ??
-                    Duration.zero;
-            final duration =
-                activeController.videoPlayerController?.value.duration ??
-                    Duration.zero;
-            final isPaused = !(activeController.isPlaying() ?? false);
-
+          onPressed: () {
             setState(() {
-              isLoopingEnabled = !isLoopingEnabled;
-              activeController.setLooping(isLoopingEnabled);
+              isLoopingEnabled = !isLoopingEnabled; // ✅ Toggle loop state
+              activeController
+                  .setLooping(isLoopingEnabled); // ✅ Gebruik activeController
             });
-
-            // Als de video op pauze staat en bij het einde is, reset en speel af
-            if (isPaused && position >= duration) {
-              activeController.seekTo(Duration.zero);
-              activeController.play();
-            }
           },
         ),
         // 0.1 seconds backwards
