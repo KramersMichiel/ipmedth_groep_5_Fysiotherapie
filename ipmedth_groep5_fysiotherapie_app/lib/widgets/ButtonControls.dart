@@ -85,17 +85,20 @@ class _ButtonControlsState extends State<ButtonControls> {
       children: [
         // Loop Button
         IconButton(
-          icon: Icon(Icons.loop),
-          color: isLoopingEnabled
-              ? Colors.green
-              : Colors.red, // ✅ Dynamische kleur
+          icon: const Icon(Icons.loop),
+          color: Colors.white,
           iconSize: 24,
           onPressed: () {
-            setState(() {
-              isLoopingEnabled = !isLoopingEnabled; // ✅ Toggle loop state
-              activeController
-                  .setLooping(isLoopingEnabled); // ✅ Gebruik activeController
-            });
+            final loopingEnabled =
+                activeController.betterPlayerConfiguration.looping;
+            // Use a workaround for enabling/disabling looping
+            activeController.setLooping(!loopingEnabled);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
+              ),
+            );
           },
         ),
         // 0.1 seconds backwards
