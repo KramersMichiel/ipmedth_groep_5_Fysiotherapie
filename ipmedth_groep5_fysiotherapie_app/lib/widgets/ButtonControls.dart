@@ -99,12 +99,12 @@ class _ButtonControlsState extends State<ButtonControls> {
                 activeController.betterPlayerConfiguration.looping;
             // Use a workaround for enabling/disabling looping
             activeController.setLooping(!loopingEnabled);
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: Text(
-            //         !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
-            //   ),
-            // );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
+              ),
+            );
           },
         ),
         // 0.1 seconds backwards
