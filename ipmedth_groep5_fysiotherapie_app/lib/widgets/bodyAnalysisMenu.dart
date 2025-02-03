@@ -127,7 +127,9 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF77BEDB), // Blue background color
+                            color: Provider.of<bodyTrackingManager>(context).getPoseState()
+                            ?Colors.green
+                            :const Color(0xFF77BEDB), // Blue background color
                             shape: BoxShape.circle, // Circular shape
                             border: Border.all(
                                 color: Colors.black, width: 1), // Black border
@@ -159,7 +161,9 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF77BEDB), // Blue background color
+                            color: Provider.of<bodyTrackingManager>(context).getDragState() == PageState.dragLandmark
+                            ?Colors.green
+                            :const Color(0xFF77BEDB), // Blue background color
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.black, width: 1),
                           ),
@@ -179,36 +183,36 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                   )
                 ),
               // Button 3
-              if (isOpen)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => print('testbutton3'),
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF77BEDB), // Blue background color
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.black, width: 1),
-                          ),
-                          child: const Icon(
-                            Icons.zoom_in,
-                            color: Colors.black,
-                            size: 32,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Zoom',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  )
-                ),
+              // if (isOpen)
+              //   Padding(
+              //     padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //     child: Column(
+              //       children: [
+              //         GestureDetector(
+              //           onTap: () => print('testbutton3'),
+              //           child: Container(
+              //             width: 56,
+              //             height: 56,
+              //             decoration: BoxDecoration(
+              //               color: const Color(0xFF77BEDB), // Blue background color
+              //               shape: BoxShape.circle,
+              //               border: Border.all(color: Colors.black, width: 1),
+              //             ),
+              //             child: const Icon(
+              //               Icons.zoom_in,
+              //               color: Colors.black,
+              //               size: 32,
+              //             ),
+              //           ),
+              //         ),
+              //         const SizedBox(height: 8),
+              //         const Text(
+              //           'Zoom',
+              //           style: TextStyle(color: Colors.white),
+              //         ),
+              //       ],
+              //     )
+              //   ),
               // Main Menu Button
               GestureDetector(
                 onTap: _toggleMenu,
