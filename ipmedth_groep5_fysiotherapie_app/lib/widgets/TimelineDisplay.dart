@@ -24,6 +24,19 @@ class _TimelineDisplayState extends State<TimelineDisplay> {
   late Duration videoDuration;
 
   @override
+  void didUpdateWidget(TimelineDisplay oldWidget){
+    super.didUpdateWidget(oldWidget);
+    if(oldWidget.isPlayingFirstVideo != widget.isPlayingFirstVideo){
+      activeController.videoPlayerController?.removeListener(_updateTimeline);
+      activeController = widget.isPlayingFirstVideo || widget.controller2 == null
+        ? widget.controller1
+        : widget.controller2!;
+      activeController.videoPlayerController?.addListener(_updateTimeline);
+      _updateTimeline();
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     activeController = widget.isPlayingFirstVideo || widget.controller2 == null

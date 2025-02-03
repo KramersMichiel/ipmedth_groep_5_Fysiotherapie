@@ -4,6 +4,7 @@ import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dar
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class BodyAnalysisMenu extends StatefulWidget {
   final BetterPlayerController controller1;
@@ -54,6 +55,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
     }
     
   }
+  
 
   BetterPlayerController get activeController {
     if (widget.isPlayingFirstVideo || widget.controller2 == null) {

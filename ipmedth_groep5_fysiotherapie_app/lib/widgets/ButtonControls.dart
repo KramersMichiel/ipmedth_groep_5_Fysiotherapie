@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:ipmedth_groep5_fysiotherapie_app/widgets/bodyTrackingManager.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ButtonControls extends StatefulWidget {
@@ -20,6 +21,8 @@ class ButtonControls extends StatefulWidget {
 }
 
 class _ButtonControlsState extends State<ButtonControls> {
+  final bodyManager = bodyTrackingManager();
+
   bool isLoopingEnabled = false; // ✅ Voeg deze variabele toe
   bool isPlaying = false;
 
@@ -39,6 +42,9 @@ class _ButtonControlsState extends State<ButtonControls> {
       });
     }
     else{
+      if(bodyManager.getPoseState()){
+        bodyManager.setHasPoseFalse();
+      }
       activeController.play();
       setState((){
         isPlaying = true;
@@ -85,30 +91,20 @@ class _ButtonControlsState extends State<ButtonControls> {
       children: [
         // Loop Button
         IconButton(
-          icon: Icon(Icons.loop),
-          color: isLoopingEnabled
-              ? Colors.green
-              : Colors.red, // ✅ Dynamische kleur
+          icon: const Icon(Icons.loop),
+          color: Colors.white,
           iconSize: 24,
-          onPressed: () async {
-            final position =
-                await activeController.videoPlayerController?.position ??
-                    Duration.zero;
-            final duration =
-                activeController.videoPlayerController?.value.duration ??
-                    Duration.zero;
-            final isPaused = !(activeController.isPlaying() ?? false);
-
-            setState(() {
-              isLoopingEnabled = !isLoopingEnabled;
-              activeController.setLooping(isLoopingEnabled);
-            });
-
-            // Als de video op pauze staat en bij het einde is, reset en speel af
-            if (isPaused && position >= duration) {
-              activeController.seekTo(Duration.zero);
-              activeController.play();
-            }
+          onPressed: () {
+            final loopingEnabled =
+                activeController.betterPlayerConfiguration.looping;
+            // Use a workaround for enabling/disabling looping
+            activeController.setLooping(!loopingEnabled);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    !loopingEnabled ? 'Looping Enabled' : 'Looping Disabled'),
+              ),
+            );
           },
         ),
         // 0.1 seconds backwards
