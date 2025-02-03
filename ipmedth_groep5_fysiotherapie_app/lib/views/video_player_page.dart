@@ -40,7 +40,6 @@ class VideoPlayerPageState extends State<VideoPlayerPage> {
   BetterPlayerController _createController(String videoPath) {
     return BetterPlayerController(
       const BetterPlayerConfiguration(
-          looping: true,
           autoPlay: false,
           aspectRatio: 9 / 16,
           controlsConfiguration: BetterPlayerControlsConfiguration(
