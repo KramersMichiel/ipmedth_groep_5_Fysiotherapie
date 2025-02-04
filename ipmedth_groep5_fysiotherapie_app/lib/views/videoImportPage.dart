@@ -127,6 +127,11 @@ class _VideoImportPageState extends State<VideoImportPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Label voor eerste video
+                const Text(
+                  "Zij aanzicht",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 _videoPlaceholder(1, _videoFile1, _videoController1),
                 const SizedBox(height: 16),
                 Center(
@@ -138,6 +143,11 @@ class _VideoImportPageState extends State<VideoImportPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Label voor tweede video
+                const Text(
+                  "Achter aanzicht",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 _videoPlaceholder(2, _videoFile2, _videoController2),
                 const SizedBox(height: 32),
                 InkWell(

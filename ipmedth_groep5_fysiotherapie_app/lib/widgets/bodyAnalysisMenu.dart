@@ -135,7 +135,7 @@ class _BodyAnalysisMenuState extends State<BodyAnalysisMenu>
                                 color: Colors.black, width: 1), // Black border
                           ),
                           child: const Icon(
-                            Icons.color_lens,
+                            Icons.analytics,
                             color: Colors.black, // White icon color
                             size: 24,
                           ),
